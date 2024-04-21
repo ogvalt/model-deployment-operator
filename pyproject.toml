@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "triton-gitops"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+kopf = { version="^1.37.2", extras=["uvloop"]}
+tritonclient = {version="^2.44.0", extras=["http"]}
+kubernetes = "^29.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.1.1"
+testcontainers = "^4.3.0"
+pytest-datadir = "^1.5.0"
+triton-testcontainer = {git = "https://github.com/ogvalt/triton-testcontainer.git"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+log_cli = false
+log_cli_level = "info"
+pythonpath = [
+  "."
+]

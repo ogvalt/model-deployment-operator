@@ -1,0 +1,28 @@
+version: '3'
+
+vars:
+  DOCKER: docker
+
+tasks:
+  docker-build:
+    desc: Building docker image
+    cmds:
+      - |
+        {{.DOCKER}} build \
+          --progress=plain \
+          --target operator_image \
+          --tag model-deployment-operator:dev \
+          --file ${PWD}/docker/Dockerfile \
+          ${PWD}
+
+  docker-run:
+    desc: Building docker image
+    cmds:
+      - |
+        {{.DOCKER}} run \
+          --rm -it --network="host" \
+          --name model_deployment_operator_instance \
+          -p 8003:8003 \
+          model-deployment-operator:dev
+
+  

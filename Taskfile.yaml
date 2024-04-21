@@ -1,0 +1,37 @@
+version: '3'
+
+dotenv: ['.env']
+
+includes:
+  docker: ./docker/Taskfile.yaml
+  kube: ./kube.Taskfile.yaml
+
+tasks:
+  test:
+    desc: Run tests
+    cmds:
+      - poetry run pytest -v --show-capture=all
+
+  clean-cache:
+    desc: Clean python, pytest, ruff, mypy caches
+    cmds:
+    - find . ! -path "*/.venv/*" -name "__pycache__" -exec rm -rv {} +
+    - find . -name ".pytest_cache" -exec rm -rv {} +
+    - find . -name ".ruff_cache" -exec rm -rv {} +
+    - find . -name ".mypy_cache" -exec rm -rv {} +
+    - find . -name ".coverage" -exec rm -rv {} +
+    - find . -name "report.xml" -exec rm -rv {} +
+
+  clean:
+    desc: Clean all
+    deps: [clean-cache]
+
+  create-object:
+    desc: Create CRD
+    cmds:
+      - kubectl apply -f ./example/obj.yaml
+
+  delete-object:
+    desc: Create CRD
+    cmds:
+      - kubectl delete -f ./example/obj.yaml

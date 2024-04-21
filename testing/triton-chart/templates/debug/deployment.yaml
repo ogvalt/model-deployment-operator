@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: debug
+  namespace: {{ .Release.Namespace | quote }}
+  labels: 
+    app.kubernetes.io/component: debug
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: debug
+  template:
+    metadata:
+      labels:
+        app: debug
+    spec:
+      containers:
+      - name: debug
+        image: ubuntu:24.04
+        command: ["/bin/bash"]
+        args:
+         - -c
+         - apt-get update && apt-get install -y curl && sleep 3600

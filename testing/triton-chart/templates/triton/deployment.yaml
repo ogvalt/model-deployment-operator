@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.triton.name }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels: 
+    app.kubernetes.io/component: serving
+spec:
+  replicas: {{ .Values.triton.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.triton.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.triton.name }}
+    spec:
+      containers:
+      - name: {{ .Values.triton.name }}
+        image: {{ .Values.triton.image.repository }}:{{ .Values.triton.image.tag }}
+        ports:
+          - containerPort: 8000
+            name: http-triton
+          - containerPort: 8001
+            name: grpc-triton
+          - containerPort: 8002
+            name: metrics-triton
+        command: ["/bin/bash"]
+        args:
+         - -c
+         - {{ .Values.triton.image.command }}

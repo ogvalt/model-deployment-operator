@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.triton.name }}
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  selector:
+    app: {{ .Values.triton.name }}
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
+    name: http-triton
+  - port: 8001
+    targetPort: 8001
+    protocol: TCP
+    name: grpc-triton
+  - port: 8002
+    targetPort: 8002
+    protocol: TCP
+    name: metrics-triton

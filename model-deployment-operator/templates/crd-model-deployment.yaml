@@ -1,0 +1,41 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: modeldeployments.{{ .Values.crd.group }}
+spec:
+  scope: Namespaced
+  group: {{ .Values.crd.group }}
+  names:
+    kind: ModelDeployment
+    plural: modeldeployments
+    singular: modeldeployment
+    shortNames:
+      - modeldepls
+      - modeldepl
+      - mds
+      - md
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+            status:
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+      additionalPrinterColumns:
+        - name: Children
+          type: string
+          priority: 0
+          jsonPath: .status.create_fn.children
+          description: The children pods created.
+        - name: Status
+          type: string
+          priority: 0
+          jsonPath: .status.model_status
+          description: Model status

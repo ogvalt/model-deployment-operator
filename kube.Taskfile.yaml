@@ -1,0 +1,76 @@
+version: '3'
+
+tasks:
+
+  develop:
+    desc: Start development process
+    cmds:
+      - task: start
+      - task: install-triton
+      - task: install-model-deployment-operator
+
+  stop-develop:
+    desc: Stop development process
+    cmds:
+      - task: delete-model-deployment-operator
+      - task: delete-triton
+      - task: stop
+  start:
+      desc: Start minikube
+      cmds:
+        - minikube start 
+        - minikube image load model-deployment-operator:dev
+  stop:
+    desc: Stop minikube
+    cmds:
+      - minikube stop
+
+  install-model-deployment-operator:
+    desc: Install helm chart
+    cmds:
+      - |
+        helm upgrade --install \
+        --values ./model-deployment-operator/values.yaml \
+        --namespace model-deployment-operator --create-namespace \
+        model-deployment-operator ./model-deployment-operator
+
+  render-model-deployment-operator-template:
+    desc: Render helm chart
+    cmds:
+      - |
+        helm template triton ./model-deployment-operator \
+        -n model-deployment-operator \
+        --values ./model-deployment-operator/values.yaml 
+        # --validate
+
+  delete-model-deployment-operator:
+    desc: Render helm chart
+    cmds:
+      - |
+        helm delete model-deployment-operator -n model-deployment-operator
+      
+  install-triton:
+    desc: Install helm chart
+    cmds:
+      - |
+        helm upgrade --install \
+        --values ./testing/triton-chart/values.yaml \
+        --values ./testing/triton-chart/triton-values.yaml \
+        --namespace triton --create-namespace \
+        triton ./testing/triton-chart
+
+  render-triton-template:
+    desc: Render helm chart
+    cmds:
+      - |
+        helm template triton ./testing/triton-chart \
+        -n triton \
+        --values ./testing/triton-chart/values.yaml \
+        --values ./testing/triton-chart/triton-values.yaml \
+        --validate
+
+  delete-triton:
+    desc: Delete helm release
+    cmds:
+      - |
+        helm delete triton -n triton

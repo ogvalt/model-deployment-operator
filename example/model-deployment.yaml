@@ -1,0 +1,16 @@
+# A demo custom resource for the Kopf example operators.
+apiVersion: ogvalt.dev/v1
+kind: ModelDeployment
+metadata:
+  name: modeldeployment-dev
+  namespace: triton
+  labels:
+    somelabel: somevalue
+  annotations:
+    someannotation: somevalue
+spec:
+  duration: 1m
+  field: value
+  items:
+  - item1
+  - item2
