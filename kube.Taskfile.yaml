@@ -1,5 +1,8 @@
 version: '3'
 
+vars:
+  OPERATOR_CHART_FOLDER: helm
+
 tasks:
 
   develop:
@@ -7,43 +10,43 @@ tasks:
     cmds:
       - task: start
       - task: install-triton
-      - task: install-model-deployment-operator
+      - task: install-operator-chart
 
   stop-develop:
     desc: Stop development process
     cmds:
-      - task: delete-model-deployment-operator
+      - task: delete-operator-chart
       - task: delete-triton
       - task: stop
   start:
       desc: Start minikube
       cmds:
-        - minikube start 
-        - minikube image load model-deployment-operator:dev
+        - minikube start --kubernetes-version=v1.29.0
+        - minikube image load popovych-labs/model-deployment-operator:dev
   stop:
     desc: Stop minikube
     cmds:
       - minikube stop
 
-  install-model-deployment-operator:
+  install-operator-chart:
     desc: Install helm chart
     cmds:
       - |
         helm upgrade --install \
-        --values ./model-deployment-operator/values.yaml \
+        --values ./{{.OPERATOR_CHART_FOLDER}}/values.yaml \
         --namespace model-deployment-operator --create-namespace \
-        model-deployment-operator ./model-deployment-operator
+        model-deployment-operator ./{{.OPERATOR_CHART_FOLDER}}
 
-  render-model-deployment-operator-template:
+  render-operator-chart:
     desc: Render helm chart
     cmds:
       - |
-        helm template triton ./model-deployment-operator \
+        helm template triton ./{{.OPERATOR_CHART_FOLDER}} \
         -n model-deployment-operator \
-        --values ./model-deployment-operator/values.yaml 
+        --values ./{{.OPERATOR_CHART_FOLDER}}/values.yaml 
         # --validate
 
-  delete-model-deployment-operator:
+  delete-operator-chart:
     desc: Render helm chart
     cmds:
       - |

@@ -1,16 +1,21 @@
-# A demo custom resource for the Kopf example operators.
-apiVersion: ogvalt.dev/v1
+apiVersion: ogvalt.dev/v1alpha1
 kind: ModelDeployment
 metadata:
   name: modeldeployment-dev
   namespace: triton
-  labels:
-    somelabel: somevalue
   annotations:
-    someannotation: somevalue
+    modelOrigin: s3
 spec:
-  duration: 1m
-  field: value
-  items:
-  - item1
-  - item2
+  modelSource: s3://bucket/model_repository/model.plan
+  jobTemplate:
+    backoffLimit: 0
+    ttlSecondsAfterFinished: 60
+    template:
+      spec:
+        restartPolicy: Never
+        containers:
+         - name: model-deployment
+           image: busybox:latest
+           envFrom:
+           - configMapRef:
+              name: aws-config

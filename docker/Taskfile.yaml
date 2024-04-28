@@ -2,27 +2,56 @@ version: '3'
 
 vars:
   DOCKER: docker
+  VERSION: dev
 
 tasks:
-  docker-build:
+  docker-build-operator:
     desc: Building docker image
+    vars: 
+      IMAGE_NAME: ${ORGANIZATION}/model-deployment-operator:{{.VERSION}}
     cmds:
       - |
         {{.DOCKER}} build \
           --progress=plain \
           --target operator_image \
-          --tag model-deployment-operator:dev \
-          --file ${PWD}/docker/Dockerfile \
+          --tag {{.IMAGE_NAME}} \
+          --file ${PWD}/docker/operator/Dockerfile \
           ${PWD}
 
-  docker-run:
+  docker-run-operator:
     desc: Building docker image
+    vars: 
+      IMAGE_NAME: ${ORGANIZATION}/model-deployment-operator:{{.VERSION}}
     cmds:
       - |
         {{.DOCKER}} run \
           --rm -it --network="host" \
           --name model_deployment_operator_instance \
           -p 8003:8003 \
-          model-deployment-operator:dev
+          {{.IMAGE_NAME}}
 
+  docker-build-jobs:
+    desc: Building docker image
+    vars: 
+      IMAGE_NAME: ${ORGANIZATION}/model-deployment-jobs:{{.VERSION}}
+    cmds:
+      - |
+        {{.DOCKER}} build \
+          --progress=plain \
+          --target operator_image \
+          --tag {{.IMAGE_NAME}} \
+          --file ${PWD}/docker/jobs/Dockerfile \
+          ${PWD}
+
+  docker-run-jobs:
+    desc: Building docker image
+    vars: 
+      IMAGE_NAME: ${ORGANIZATION}/model-deployment-jobs:{{.VERSION}}
+    cmds:
+      - |
+        {{.DOCKER}} run \
+          --rm -it --network="host" \
+          --name model_deployment_operator_instance \
+          -p 8003:8003 \
+          {{.IMAGE_NAME}}
   

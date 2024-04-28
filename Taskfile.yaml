@@ -26,12 +26,17 @@ tasks:
     desc: Clean all
     deps: [clean-cache]
 
+  generate-crd:
+    desc: Generate CRD
+    cmds:
+      - poetry run python src/crd/model_deployment_crd_generator.py > helm/templates/crd-model-deployment.yaml
+
   create-object:
     desc: Create CRD
     cmds:
-      - kubectl apply -f ./example/obj.yaml
+      - kubectl apply -f ./example/model-deployment.yaml
 
   delete-object:
-    desc: Create CRD
+    desc: Delete CRD
     cmds:
-      - kubectl delete -f ./example/obj.yaml
+      - kubectl delete -f ./example/model-deployment.yaml

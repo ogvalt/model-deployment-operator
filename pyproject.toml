@@ -7,15 +7,21 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
+
+[tool.poetry.group.operator.dependencies]
 kopf = { version="^1.37.2", extras=["uvloop"]}
-tritonclient = {version="^2.44.0", extras=["http"]}
 kubernetes = "^29.0.0"
+geventhttpclient = ">=1.4.4,<=2.0.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.1.1"
 testcontainers = "^4.3.0"
 pytest-datadir = "^1.5.0"
-triton-testcontainer = {git = "https://github.com/ogvalt/triton-testcontainer.git"}
+triton-testcontainer = {git = "https://github.com/ogvalt/triton-testcontainer.git", rev = "v0.3.0"}
+kubecrd = {git = "https://github.com/ogvalt/kubecrd.git", rev = "v0.5.1"}
+pydantic = "^2.7.1"
+jsonref = "^1.1.0"
+pyyaml = "^6.0.1"
 
 
 [build-system]

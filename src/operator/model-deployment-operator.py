@@ -1,5 +1,5 @@
 import kopf
-import tritonclient.http as tritonhttpclient
+from triton_client import InferenceServerClient
 
 
 CRD_NAME = "modeldeployments"
@@ -17,7 +17,7 @@ def create_fn(spec, name, namespace, logger, **kwargs):
 
     logger.info(url)
 
-    client = tritonhttpclient.InferenceServerClient(url)
+    client = InferenceServerClient(url)
 
     try:
         logger.info(client.get_server_metadata())
@@ -39,7 +39,7 @@ def model_status(name, namespace, logger, **kwargs):
     model_version = ""
 
     url = get_triton_url(namespace)
-    client = tritonhttpclient.InferenceServerClient(url)
+    client = InferenceServerClient(url)
     
     list_available_models = client.get_model_repository_index()
 
