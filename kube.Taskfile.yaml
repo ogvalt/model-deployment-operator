@@ -22,7 +22,7 @@ tasks:
       desc: Start minikube
       cmds:
         - minikube start --kubernetes-version=v1.29.0
-        - minikube image load popovych-labs/model-deployment-operator:dev
+        - minikube image load popovych-labs/model-deployment-operator:latest-dev
   stop:
     desc: Stop minikube
     cmds:

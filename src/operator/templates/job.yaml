@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ modelName }}-{{ jobType }}
+  namespace: {{ namespace }}
+  labels:
+    model-deployment-operator/jobType: {{ jobType }} # load | unload
+    model-deployment-operator/modelName: {{ modelName }} # same as ModelDeployment name
+    model-deployment-operator/modelSource : {{ modelSource }} # same as ModelDeployment modelSource
+
+spec:
+  template:
+    spec:
+      volumes:
+      - name: config-volume
+        configMap:
+          name: {{ configMapName }}
+      containers:
+      - name: model-deployment
+        image: {{ jobImage }}
+        args: ["--src", "{{ modelSource }}", "--dest", "{{ modelDest }}"]
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/config
+      restartPolicy: Never
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 36000

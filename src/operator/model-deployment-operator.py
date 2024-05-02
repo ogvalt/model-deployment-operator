@@ -1,5 +1,6 @@
 import kopf
 from triton_client import InferenceServerClient
+from kubernetes.client.models import V1Job, V1JobSpec
 
 
 CRD_NAME = "modeldeployments"

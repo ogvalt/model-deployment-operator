@@ -1,0 +1,67 @@
+name: "Model"
+backend: "python"
+max_batch_size : 2
+input [
+  {
+    name: "one"
+    data_type: TYPE_INT32
+    dims: [1]
+  },
+  {
+    name: "two"
+    data_type: TYPE_FP32
+    dims: [1]
+  }
+]
+output [
+  {
+    name: "one"
+    data_type: TYPE_INT32
+    dims: [1]
+  },
+  {
+    name: "two"
+    data_type: TYPE_FP32
+    dims: [1]
+  }
+]
+instance_group {
+  count: 1
+  kind: KIND_CPU
+}
+sequence_batching {
+  max_sequence_idle_microseconds: 300000000000
+  oldest {}
+  control_input [
+    {
+      name: "START"
+      control [
+        {
+          kind: CONTROL_SEQUENCE_START
+          fp32_false_true: [ 0, 1 ]
+        }
+      ]
+    },
+    {
+      name: "END"
+      control [
+        {
+          kind: CONTROL_SEQUENCE_END
+          fp32_false_true: [ 0, 1 ]
+        }
+      ]
+    }
+  ]
+}
+parameters {
+  key: "one"
+  value: {
+    string_value: "0.5"
+  }
+}
+parameters {
+  key: "two"
+  value: {
+    string_value: "0.1"
+  }
+}

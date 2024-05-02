@@ -34,7 +34,7 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           {{ if .Values.debug }}
-          command: ["/bin/bash"]
+          command: ["/bin/sh"]
           args:
             - -c
             - "sleep 36000"

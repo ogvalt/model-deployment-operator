@@ -1,0 +1,56 @@
+apiVersion: ogvalt.dev/v1alpha1
+kind: ModelDeployment
+metadata:
+  name: modeldeployment-s3-dev
+  namespace: triton
+  annotations:
+    modelOrigin: s3
+spec:
+  modelSource: s3://bucket/model_repository/model.plan
+  jobImage: popovych-labs/model-deployment-job-s3:latest
+  configMap: aws-config
+  config.pbtxt: 
+    name: Model
+    max_batch_size: 2
+    input:
+    - name: one
+      data_type: TYPE_INT32
+      dims:
+      - '1'
+    - name: two
+      data_type: TYPE_FP32
+      dims:
+      - '1'
+    output:
+    - name: one
+      data_type: TYPE_INT32
+      dims:
+      - '1'
+    - name: two
+      data_type: TYPE_FP32
+      dims:
+      - '1'
+    instance_group:
+    - count: 1
+      kind: KIND_CPU
+    sequence_batching:
+      max_sequence_idle_microseconds: '300000000000'
+      control_input:
+      - name: START
+        control:
+        - fp32_false_true:
+          - 0.0
+          - 1.0
+      - name: END
+        control:
+        - kind: CONTROL_SEQUENCE_END
+          fp32_false_true:
+          - 0.0
+          - 1.0
+      oldest: {}
+    parameters:
+      two:
+        string_value: '0.1'
+      one:
+        string_value: '0.5'
+    backend: python

@@ -10,7 +10,7 @@ image:
   repository: popovych-labs/model-deployment-operator
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "dev"
+  tag: "latest-dev"
 
 imagePullSecrets: []
 nameOverride: ""

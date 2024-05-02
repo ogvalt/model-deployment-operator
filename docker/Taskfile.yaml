@@ -2,16 +2,31 @@ version: '3'
 
 vars:
   DOCKER: docker
-  VERSION: dev
+  VERSION: latest
 
 tasks:
-  docker-build-operator:
+  docker-build-operator-dev:
+    desc: Building docker image
+    vars: 
+      IMAGE_NAME: ${ORGANIZATION}/model-deployment-operator:{{.VERSION}}-dev
+    cmds:
+      - |
+        {{.DOCKER}} build \
+          --build-arg IMAGE_TAG=3.10 \
+          --progress=plain \
+          --target operator_image \
+          --tag {{.IMAGE_NAME}} \
+          --file ${PWD}/docker/operator/Dockerfile \
+          ${PWD}
+
+  docker-build-operator-prod:
     desc: Building docker image
     vars: 
       IMAGE_NAME: ${ORGANIZATION}/model-deployment-operator:{{.VERSION}}
     cmds:
       - |
         {{.DOCKER}} build \
+          --build-arg IMAGE_TAG=3.10-alpine \
           --progress=plain \
           --target operator_image \
           --tag {{.IMAGE_NAME}} \

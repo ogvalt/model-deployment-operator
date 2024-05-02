@@ -4,10 +4,9 @@ metadata:
   name: modeldeployment-dev
   namespace: triton
   annotations:
-    modelOrigin: s3
+    modelOrigin: custom
 spec:
-  modelSource: s3://bucket/model_repository/model.plan
-  jobTemplate:
+  jobSpec:
     backoffLimit: 0
     ttlSecondsAfterFinished: 60
     template:
@@ -16,6 +15,10 @@ spec:
         containers:
          - name: model-deployment
            image: busybox:latest
-           envFrom:
-           - configMapRef:
-              name: aws-config
+           args:
+            - /bin/sh
+            - -c
+            - |
+              custom_model_deployment_executable --src=/src --dest=?
+              # TODO: figure out how to pass tritonserver pod url to the executable
+           
