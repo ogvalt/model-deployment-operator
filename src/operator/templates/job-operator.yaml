@@ -4,10 +4,14 @@ metadata:
   name: {{ modelName }}-{{ jobType }}
   namespace: {{ namespace }}
   labels:
-    model-deployment-operator/jobType: {{ jobType }} # load | unload
-    model-deployment-operator/modelName: {{ modelName }} # same as ModelDeployment name
-    model-deployment-operator/modelSource : {{ modelSource }} # same as ModelDeployment modelSource
-
+    # template for job is part of operator or user provided
+    model-deployment-operator/templateProvider : operator 
+    # load | unload
+    model-deployment-operator/jobType: {{ jobType }} 
+     # same as ModelDeployment name
+    model-deployment-operator/modelName: {{ modelName }}
+    # same as ModelDeployment modelSource
+    model-deployment-operator/modelSource : {{ modelSource }} 
 spec:
   template:
     spec:
