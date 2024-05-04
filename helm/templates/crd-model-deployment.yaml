@@ -37,139 +37,28 @@ spec:
         properties:
           spec:
             properties:
-              jobTemplate:
-                properties:
-                  backoffLimit:
-                    title: Backofflimit
-                    type: integer
-                  template:
-                    properties:
-                      spec:
-                        properties:
-                          containers:
-                            default: []
-                            items:
-                              properties:
-                                env:
-                                  default: []
-                                  items:
-                                    properties:
-                                      name:
-                                        title: Name
-                                        type: string
-                                      value:
-                                        title: Value
-                                        type: string
-                                    required:
-                                    - name
-                                    - value
-                                    title: EnvironmentVariable
-                                    type: object
-                                  title: Env
-                                  type: array
-                                envFrom:
-                                  default: []
-                                  items:
-                                    properties:
-                                      configMapRef:
-                                        properties:
-                                          name:
-                                            title: Name
-                                            type: string
-                                        required:
-                                        - name
-                                        title: configMapRefElement
-                                        type: object
-                                    required:
-                                    - configMapRef
-                                    title: configMapRefObj
-                                    type: object
-                                  title: Envfrom
-                                  type: array
-                                image:
-                                  title: Image
-                                  type: string
-                                name:
-                                  title: Name
-                                  type: string
-                                volumeMounts:
-                                  default: []
-                                  items:
-                                    properties:
-                                      mountPath:
-                                        title: Mountpath
-                                        type: string
-                                      name:
-                                        title: Name
-                                        type: string
-                                    required:
-                                    - name
-                                    - mountPath
-                                    title: VolumeMount
-                                    type: object
-                                  title: Volumemounts
-                                  type: array
-                              required:
-                              - name
-                              - image
-                              title: Container
-                              type: object
-                            title: Containers
-                            type: array
-                          restartPolicy:
-                            default: Never
-                            title: Restartpolicy
-                            type: string
-                          volumes:
-                            default: []
-                            items:
-                              properties:
-                                configMap:
-                                  properties:
-                                    configMapRef:
-                                      properties:
-                                        name:
-                                          title: Name
-                                          type: string
-                                      required:
-                                      - name
-                                      title: configMapRefElement
-                                      type: object
-                                  required:
-                                  - configMapRef
-                                  title: configMapRefObj
-                                  type: object
-                                name:
-                                  title: Name
-                                  type: string
-                              required:
-                              - name
-                              - configMap
-                              title: Volumes
-                              type: object
-                            title: Volumes
-                            type: array
-                        title: Spec
-                        type: object
-                    required:
-                    - spec
-                    title: PodTemplate
-                    type: object
-                  ttlSecondsAfterFinished:
-                    title: Ttlsecondsafterfinished
-                    type: integer
-                required:
-                - backoffLimit
-                - ttlSecondsAfterFinished
-                - template
-                title: JobTemplate
+              configMap:
+                title: Configmap
+                type: string
+              jobImage:
+                title: Jobimage
+                type: string
+              jobSpec:
+                default: {}
+                title: Jobspec
                 type: object
+                x-kubernetes-preserve-unknown-fields: 'true'
+              modelConfig:
+                default: ''
+                title: Modelconfig
+                type: string
               modelSource:
                 title: Modelsource
                 type: string
             required:
             - modelSource
-            - jobTemplate
+            - jobImage
+            - configMap
             title: ModelDeploymentSpec
             type: object
         type: object

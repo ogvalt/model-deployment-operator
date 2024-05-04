@@ -1,74 +1,13 @@
-import schemabase
-from pydantic import BaseModel, Field
+import crd.schemabase as schemabase
 
-
-
-class configMapRefElement(BaseModel):
-    name: str
-
-
-class configMapRefObj(BaseModel):
-    configMapRef: configMapRefElement
-
-
-# @dataclass
-class EnvironmentVariable(BaseModel):
-    name: str
-    value: str
-
-
-# @dataclass
-class VolumeMount(BaseModel):
-    name: str
-    mountPath: str
-
-
-# @dataclass
-class Container(BaseModel):
-    name: str
-    image: str
-    env: list[EnvironmentVariable] = []
-    envFrom: list[configMapRefObj] = []
-    volumeMounts: list[VolumeMount] = []
-
-
-# @dataclass
-class Volumes(BaseModel):
-    name: str
-    configMap: configMapRefObj
-
-
-# @dataclass
-class Spec(BaseModel):
-    containers: list[Container] = []
-    volumes: list[Volumes] = []
-    restartPolicy: str = "Never"
-
-
-# @dataclass
-class PodTemplate(BaseModel):
-    spec: Spec
-
-
-# @dataclass
-class JobTemplate(BaseModel):
-    backoffLimit: int
-    ttlSecondsAfterFinished: int
-    template: PodTemplate
-
-
-# @dataclass
-class ModelDeploymentSpec(BaseModel):
-    modelSource: str
-    jobTemplate: JobTemplate
-
+import crd.model as model
 
 class ModelDeployment(schemabase.KubeResourceBase):
     __group__ = '{{ .Values.crd.group }}'
     __version__ = 'v1alpha1'
     __short_names__ = ["modeldepls", "modeldepl", "mds", "md"]
 
-    spec = ModelDeploymentSpec
+    spec = model.ModelDeploymentSpec
     additionalPrinterColumns = [
         {
             "name": "Children",
@@ -93,5 +32,5 @@ class ModelDeployment(schemabase.KubeResourceBase):
         }
     ]
 
-
-print(ModelDeployment.crd_schema())
+if __name__ == "__main__":
+    print(ModelDeployment.crd_schema())

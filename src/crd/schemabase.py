@@ -26,7 +26,9 @@ class KubeResourceBase:
 
         spec_json_schema = spec.model_json_schema()
         spec_jsonref_schema = jsonref.replace_refs(spec_json_schema, proxies=False)
-        del spec_jsonref_schema["$defs"]
+
+        if spec_jsonref_schema.get("$defs", None) is not None:
+            del spec_jsonref_schema["$defs"]
 
         return spec_jsonref_schema
 
