@@ -11,7 +11,7 @@ metadata:
      # same as ModelDeployment name
     model-deployment-operator/modelName: {{ modelName }}
     # same as ModelDeployment modelSource
-    model-deployment-operator/modelSource : {{ modelSource }} 
+    {# model-deployment-operator/modelSource : {{ modelSource }}  #}
 spec:
   template:
     spec:
@@ -22,7 +22,21 @@ spec:
       containers:
       - name: model-deployment
         image: {{ jobImage }}
-        args: ["--src", "{{ modelSource }}", "--dest", "{{ modelDest }}"]
+        args: [
+          "--destination", "{{ tritonUrls }}",
+          {%- if s3AuthFile is not none %}
+          "--s3_auth_file", "{{ s3AuthFile }}",
+          {%- endif -%}
+          {% if jobType == 'load' %}
+          "load",
+          "--model_name", "{{ modelName }}",
+          "--model_spec", "{{ modelSpec }}",
+          {%- endif -%}
+          {% if jobType == 'unload' %}
+          "unload",
+          "--model_name", "{{ modelName }}",
+          {%- endif %}
+        ]
         volumeMounts:
         - name: config-volume
           mountPath: /etc/config

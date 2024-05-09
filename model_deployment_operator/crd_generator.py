@@ -1,13 +1,13 @@
-import crd.schemabase as schemabase
+from model_deployment_operator.crd.schemabase import KubeResourceBase
+from model_deployment_operator.crd.model import ModelDeploymentSpec
 
-import crd.model as model
 
-class ModelDeployment(schemabase.KubeResourceBase):
+class ModelDeployment(KubeResourceBase):
     __group__ = '{{ .Values.crd.group }}'
     __version__ = 'v1alpha1'
     __short_names__ = ["modeldepls", "modeldepl", "mds", "md"]
 
-    spec = model.ModelDeploymentSpec
+    spec = ModelDeploymentSpec
     additionalPrinterColumns = [
         {
             "name": "Children",
@@ -32,5 +32,11 @@ class ModelDeployment(schemabase.KubeResourceBase):
         }
     ]
 
-if __name__ == "__main__":
+
+def main():
     print(ModelDeployment.crd_schema())
+    return 0
+
+
+if __name__ == "__main__":
+    exit(main())

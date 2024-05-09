@@ -29,7 +29,7 @@ tasks:
   generate-crd:
     desc: Generate CRD
     cmds:
-      - poetry run python src/crd/model_deployment_crd_generator.py > helm/templates/crd-model-deployment.yaml
+      - poetry run python model_deployment_operator/crd_generator.py > helm/templates/crd-model-deployment.yaml
 
   create-object:
     desc: Create CRD

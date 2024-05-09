@@ -37,28 +37,80 @@ spec:
         properties:
           spec:
             properties:
-              configMap:
-                title: Configmap
-                type: string
-              jobImage:
-                title: Jobimage
-                type: string
-              jobSpec:
+              jobTemplate:
                 default: {}
-                title: Jobspec
+                title: Jobtemplate
                 type: object
                 x-kubernetes-preserve-unknown-fields: 'true'
-              modelConfig:
-                default: ''
-                title: Modelconfig
-                type: string
-              modelSource:
-                title: Modelsource
-                type: string
+              model:
+                properties:
+                  labels:
+                    default: []
+                    items:
+                      type: string
+                    title: Labels
+                    type: array
+                  modelConfig:
+                    allOf:
+                    - properties:
+                        input:
+                          items: {}
+                          title: Input
+                          type: array
+                        max_batch_size:
+                          title: Max Batch Size
+                          type: integer
+                        output:
+                          items: {}
+                          title: Output
+                          type: array
+                        platform:
+                          title: Platform
+                          type: string
+                      required:
+                      - max_batch_size
+                      - input
+                      - output
+                      - platform
+                      title: ModelConfigSpec
+                      type: object
+                    x-kubernetes-preserve-unknown-fields: 'true'
+                  versions:
+                    items:
+                      properties:
+                        files:
+                          items:
+                            properties:
+                              name:
+                                title: Name
+                                type: string
+                              source:
+                                title: Source
+                                type: string
+                            required:
+                            - name
+                            - source
+                            title: FileSpec
+                            type: object
+                          title: Files
+                          type: array
+                        version:
+                          title: Version
+                          type: integer
+                      required:
+                      - version
+                      - files
+                      title: VersionSpec
+                      type: object
+                    title: Versions
+                    type: array
+                required:
+                - modelConfig
+                - versions
+                title: ModelSpec
+                type: object
             required:
-            - modelSource
-            - jobImage
-            - configMap
+            - model
             title: ModelDeploymentSpec
             type: object
         type: object
