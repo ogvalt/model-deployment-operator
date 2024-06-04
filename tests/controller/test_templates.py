@@ -1,4 +1,4 @@
-import model_deployment_operator.controller.templates as templates
+from src import model_deployment_operator as templates
 
 import kubernetes_validate
 import yaml

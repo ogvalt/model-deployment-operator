@@ -5,6 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   labels: 
     app.kubernetes.io/component: serving
+    app: tritonserver
 spec:
   replicas: {{ .Values.triton.replicaCount }}
   selector:
@@ -13,7 +14,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ .Values.triton.name }}
+        app: tritonserver
     spec:
       containers:
       - name: {{ .Values.triton.name }}

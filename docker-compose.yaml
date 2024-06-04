@@ -1,0 +1,14 @@
+services:
+  localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME:-localstack-main}"
+    network_mode: "host"
+    image: localstack/localstack:latest
+    ports:
+      - "4568:4568"
+    environment:
+      - SERVICES=s3  # Specify desired services (optional, adjust for other services)
+      - SETUP_BUCKET_NAME=bucket
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - ${PWD}/tests/data/models_repository/simple/1:/models
+      - ${PWD}/scripts/localstack/init/setup_bucket.sh:/etc/localstack/init/ready.d/init.sh

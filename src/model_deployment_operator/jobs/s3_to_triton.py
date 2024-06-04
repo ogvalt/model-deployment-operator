@@ -7,9 +7,8 @@ import boto3
 from mypy_boto3_s3.client import S3Client
 
 import logging
-import json
 
-from model_deployment_operator.crd.model import ModelDeploymentSpec
+from src.model_deployment_operator.crd.model import ModelSpec
 
 logger = logging.getLogger("model-deployment-operator")
 
@@ -24,7 +23,6 @@ class S3FileDownloader:
             config: boto3.session.Config = boto3.session.Config(signature_version='s3v4'),
             verify: bool | None = False
     ) -> None:
-
         self.s3_client: S3Client = boto3.client(
             service_name='s3',
             region_name=region_name,
@@ -35,60 +33,6 @@ class S3FileDownloader:
             verify=verify,
         )
 
-    @classmethod
-    def from_env_vars(cls):
-        """This function initializes S3FileDownloader from environment variables"""
-
-        aws_access_key_id = os.getenv("AWS_ACCESS_KEY_ID")
-        if aws_access_key_id is None:
-            raise EnvironmentError("AWS_ACCESS_KEY_ID is not set")
-
-        aws_secret_access_key = os.getenv("AWS_SECRET_ACCESS_KEY")
-        if aws_secret_access_key is None:
-            raise EnvironmentError("AWS_ACCESS_KEY_ID is not set")
-
-        aws_region = os.getenv("AWS_REGION", "us-east-1")
-        aws_endpoint_url = os.getenv("AWS_ENDPOINT_URL", None)
-
-        client = S3FileDownloader(
-            region_name=aws_region,
-            endpoint_url=aws_endpoint_url,
-            aws_access_key_id=aws_access_key_id,
-            aws_secret_access_key=aws_secret_access_key,
-        )
-
-        return client
-
-    @classmethod
-    def from_config_file(cls, path_to_config: os.PathLike):
-        """
-            This function initializes S3FileDownloader from config file.
-            Expected file format is JSON.
-            {
-                "AWS_ACCESS_KEY_ID": xxx,
-                "AWS_SECRET_ACCESS_KEY": xxx,
-                "AWS_REGION": xxx,
-                "AWS_ENDPOINT_URL": xxx
-            }
-
-        """
-        with open(path_to_config, 'r') as f:
-            config_dict: dict = json.load(f)
-
-        aws_access_key_id = config_dict["AWS_ACCESS_KEY_ID"]
-        aws_secret_access_key = config_dict["AWS_SECRET_ACCESS_KEY"]
-        aws_region = config_dict.get("AWS_REGION", "us-east-1")
-        aws_endpoint_url = config_dict.get("AWS_ENDPOINT_URL", None)
-
-        client = S3FileDownloader(
-            region_name=aws_region,
-            endpoint_url=aws_endpoint_url,
-            aws_access_key_id=aws_access_key_id,
-            aws_secret_access_key=aws_secret_access_key,
-        )
-
-        return client
-
     def load_file_from_s3(self, bucket: str, key: str, local_path: os.PathLike):
         self.s3_client.download_file(Bucket=bucket, Key=key, Filename=str(local_path))
         return local_path
@@ -98,30 +42,36 @@ class S3FileDownloader:
         return response["Body"].read()
 
 
-class ModelRepository:
-    def __init__(self, destination: list[str],
-                 s3_auth_file: os.PathLike | None = None,
-                 s3_downloader: S3FileDownloader | None = None):
+class S3ToTritonScript:
+    def __init__(
+            self,
+            destination: str,
+            aws_access_key_id: str,
+            aws_secret_access_key: str,
+            aws_region_name: str = "us-east-1",
+            aws_endpoint_url: str | None = None,
+    ):
         """
         This class is responsible for uploading models to Triton server.
 
         Args:
-            destination: list of Triton server URLs
-            s3_auth_file: path to file with S3 credentials (see S3FileDownloader.from_config_file)
+            destination: comma separated list of urls to Triton server instances
+            aws_access_key_id: AWS access key ID
+            aws_secret_access_key: AWS secret access key
+            aws_region_name: AWS region name
+            aws_endpoint_url: AWS endpoint URL            
 
         """
         self.endpoints = [
-            httpclient.InferenceServerClient(url=item, verbose=False) for item in destination
+            httpclient.InferenceServerClient(url=item, verbose=False) for item in destination.split(",")
         ]
 
-        if s3_downloader is not None:
-            self.s3_downloader = s3_downloader
-            return
-
-        if s3_auth_file is None:
-            self.s3_downloader = S3FileDownloader.from_env_vars()
-        else:
-            self.s3_downloader = S3FileDownloader.from_config_file(s3_auth_file)
+        self.s3_downloader = S3FileDownloader(
+            region_name=aws_region_name,
+            endpoint_url=aws_endpoint_url,
+            aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key,
+        )
 
     def load(
             self,
@@ -134,13 +84,13 @@ class ModelRepository:
             model_name: model name
             model_spec: path to model specification JSON formated string
         """
-        model_spec: ModelDeploymentSpec = ModelDeploymentSpec.model_validate_json(model_spec)
+        model_spec: ModelSpec = ModelSpec.model_validate_json(model_spec)
 
-        model_config_json = model_spec.model.modelConfig.model_dump_json()
+        model_config_json = model_spec.config.model_dump_json()
 
-        labels = model_spec.model.labels
+        labels = model_spec.labels
 
-        versions = model_spec.model.versions
+        versions = model_spec.versions
 
         files = {}
 
@@ -183,4 +133,4 @@ class ModelRepository:
 
 
 if __name__ == '__main__':
-    fire.Fire(ModelRepository)
+    fire.Fire(S3ToTritonScript)

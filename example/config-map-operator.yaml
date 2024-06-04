@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: operator-config
+data:
+  awsConfig: |
+    access_key_id: XXX
+    secret_access_key: XXX
+    region_name: XXX
+    endpoint_url: XXX
+    

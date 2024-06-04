@@ -1,10 +1,9 @@
-import os
 import pytest
 import testcontainers.localstack as localstack
 
 from mypy_boto3_s3 import S3Client
-from model_deployment_operator.jobs.s3_to_triton import S3FileDownloader, ModelRepository
-from model_deployment_operator.crd.model import ModelSpec, ModelConfigSpec, VersionSpec, FileSpec, ModelDeploymentSpec
+from src.model_deployment_operator.jobs.s3_to_triton import S3ToTritonScript
+from src.model_deployment_operator.crd.model import ModelSpec, ModelConfigSpec, VersionSpec, FileSpec
 
 import triton_testcontainer as tritoncontainer
 import tritonclient.http as tritonhttpclient
@@ -74,9 +73,8 @@ def setup_localstack(request, global_shared_datadir):
         Key=key
     )
 
-    model_spec = ModelDeploymentSpec(
-        model=ModelSpec(
-            modelConfig=ModelConfigSpec(
+    model_spec = ModelSpec(
+            config=ModelConfigSpec(
                 max_batch_size=8,
                 platform="tensorflow_graphdef",
                 input=[
@@ -117,15 +115,14 @@ def setup_localstack(request, global_shared_datadir):
                 )
             ]
         )
-    )
 
     endpoint_url = container.get_url()
     aws_access_key_id = "testcontainers-localstack"
     aws_secret_access_key = "testcontainers-localstack"
 
     return {
-        "region_name": region_name,
-        "endpoint_url": endpoint_url,
+        "aws_region_name": region_name,
+        "aws_endpoint_url": endpoint_url,
         "aws_access_key_id": aws_access_key_id,
         "aws_secret_access_key": aws_secret_access_key
     }, {
@@ -137,14 +134,12 @@ def setup_localstack(request, global_shared_datadir):
 def test_load_and_unload(setup_localstack):
     creds, model = setup_localstack
 
-    downloader = S3FileDownloader(**creds)
-
     with tritoncontainer.TritonContainer(with_gpus=False) as tritonserver:
         client = tritonserver.get_client()
 
-        repository = ModelRepository(
-            destination=[tritonserver.get_url("http")],
-            s3_downloader=downloader
+        repository = S3ToTritonScript(
+            destination=tritonserver.get_url("http"),
+            **creds
         )
         repository.load(**model)
 

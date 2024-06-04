@@ -38,43 +38,1881 @@ spec:
           spec:
             properties:
               jobTemplate:
-                default: {}
-                title: Jobtemplate
+                properties:
+                  provider:
+                    default: operator
+                    title: Provider
+                    type: string
+                  spec:
+                    properties:
+                      auth:
+                        properties:
+                          name:
+                            default: ''
+                            title: Name
+                            type: string
+                          type:
+                            default: ''
+                            title: Type
+                            type: string
+                        title: AuthSpec
+                        type: object
+                      source:
+                        default: ''
+                        title: Source
+                        type: string
+                    required:
+                    - auth
+                    title: JobSpec
+                    type: object
+                required:
+                - spec
+                title: JobTemplate
                 type: object
-                x-kubernetes-preserve-unknown-fields: 'true'
               model:
                 properties:
+                  config:
+                    additionalProperties: true
+                    properties:
+                      backend:
+                        default: null
+                        description: '@@  .. cpp:var:: string backend@@@@     The
+                          backend used by the model.@@'
+                        title: Backend
+                        type: string
+                      batch_input:
+                        default: null
+                        description: '@@  .. cpp:var:: BatchInput batch_input (repeated)@@@@     The
+                          model input(s) that the server should use to communicate@@     batch
+                          related values to the model.@@'
+                        items:
+                          additionalProperties: true
+                          properties:
+                            data_type:
+                              default: null
+                              description: '@@.. cpp:namespace:: inference  @@@@..
+                                cpp:enum:: DataType@@@@   Data types supported for
+                                input and output tensors.@@'
+                              enum:
+                              - TYPE_INVALID
+                              - 0
+                              - TYPE_BOOL
+                              - 1
+                              - TYPE_UINT8
+                              - 2
+                              - TYPE_UINT16
+                              - 3
+                              - TYPE_UINT32
+                              - 4
+                              - TYPE_UINT64
+                              - 5
+                              - TYPE_INT8
+                              - 6
+                              - TYPE_INT16
+                              - 7
+                              - TYPE_INT32
+                              - 8
+                              - TYPE_INT64
+                              - 9
+                              - TYPE_FP16
+                              - 10
+                              - TYPE_FP32
+                              - 11
+                              - TYPE_FP64
+                              - 12
+                              - TYPE_STRING
+                              - 13
+                              - TYPE_BF16
+                              - 14
+                              title: '@@.. cpp:namespace:: inference'
+                              type: string
+                            kind:
+                              default: null
+                              description: '@@@@    .. cpp:enum:: Kind@@@@       The
+                                kind of the batch input.@@'
+                              enum:
+                              - BATCH_ELEMENT_COUNT
+                              - 0
+                              - BATCH_ACCUMULATED_ELEMENT_COUNT
+                              - 1
+                              - BATCH_ACCUMULATED_ELEMENT_COUNT_WITH_ZERO
+                              - 2
+                              - BATCH_MAX_ELEMENT_COUNT_AS_SHAPE
+                              - 3
+                              - BATCH_ITEM_SHAPE
+                              - 4
+                              - BATCH_ITEM_SHAPE_FLATTEN
+                              - 5
+                              title: Kind
+                              type: string
+                            source_input:
+                              default: null
+                              description: '@@    .. cpp:var:: string source_input
+                                (repeated)@@@@       The backend derives the value
+                                for each batch input from one or@@       more other
+                                inputs. ''source_input'' gives the names of those@@       inputs.@@'
+                              items:
+                                type: string
+                              title: Source Input
+                              type: array
+                            target_name:
+                              default: null
+                              description: '@@    .. cpp:var:: string target_name
+                                (repeated)@@@@       The name of the model inputs
+                                that the backend will create@@       for this batch
+                                input.@@'
+                              items:
+                                type: string
+                              title: Target Name
+                              type: array
+                          title: BatchInputItem
+                          type: object
+                        title: Batch Input
+                        type: array
+                      batch_output:
+                        default: null
+                        description: '@@  .. cpp:var:: BatchOutput batch_output (repeated)@@@@     The
+                          outputs produced by the model that requires special handling@@     by
+                          the model backend.@@'
+                        items:
+                          additionalProperties: true
+                          properties:
+                            kind:
+                              default: null
+                              description: '@@@@  .. cpp:enum:: Kind@@@@     The kind
+                                of the batch output.@@'
+                              enum:
+                              - BATCH_SCATTER_WITH_INPUT_SHAPE
+                              - 0
+                              title: Kind
+                              type: string
+                            source_input:
+                              default: null
+                              description: '@@  .. cpp:var:: string source_input (repeated)@@@@     The
+                                backend derives each batch output from one or more
+                                inputs.@@     ''source_input'' gives the names of
+                                those inputs.@@'
+                              items:
+                                type: string
+                              title: Source Input
+                              type: array
+                            target_name:
+                              default: null
+                              description: '@@  .. cpp:var:: string target_name (repeated)@@@@     The
+                                name of the outputs to be produced by this batch output@@     specification.@@'
+                              items:
+                                type: string
+                              title: Target Name
+                              type: array
+                          title: BatchOutputItem
+                          type: object
+                        title: Batch Output
+                        type: array
+                      cc_model_filenames:
+                        additionalProperties:
+                          type: string
+                        default: null
+                        description: '@@  .. cpp:var:: map<string,string> cc_model_filenames@@@@     Optional
+                          map from CUDA compute capability to the filename of@@     the
+                          model that supports that compute capability. The filename@@     refers
+                          to a file within the model version directory.@@'
+                        title: Cc Model Filenames
+                        type: object
+                      default_model_filename:
+                        default: null
+                        description: '@@  .. cpp:var:: string default_model_filename@@@@     Optional
+                          filename of the model file to use if a@@     compute-capability
+                          specific model is not specified in@@     :cpp:var:`cc_model_filenames`.
+                          If not specified the default name@@     is ''model.graphdef'',
+                          ''model.savedmodel'', ''model.plan'' or@@     ''model.pt''
+                          depending on the model type.@@'
+                        title: Default Model Filename
+                        type: string
+                      dynamic_batching:
+                        additionalProperties: true
+                        properties:
+                          default_priority_level:
+                            default: null
+                            description: '@@  .. cpp:var:: uint64 default_priority_level@@@@     The
+                              priority level used for requests that don''t specify
+                              their@@     priority. The value must be in the range
+                              [ 1, ''priority_levels'' ].@@'
+                            title: Default Priority Level
+                            type: string
+                          default_queue_policy:
+                            additionalProperties: true
+                            properties:
+                              allow_timeout_override:
+                                default: null
+                                description: '@@@@  .. cpp:var:: bool allow_timeout_override@@@@     Whether
+                                  individual request can override the default timeout
+                                  value.@@     When true, individual requests can
+                                  set a timeout that is less than@@     the default
+                                  timeout value but may not increase the timeout.@@     The
+                                  default value is false.@@'
+                                title: Allow Timeout Override
+                                type: boolean
+                              default_timeout_microseconds:
+                                default: null
+                                description: '@@@@  .. cpp:var:: uint64 default_timeout_microseconds@@@@     The
+                                  default timeout for every request, in microseconds.@@     The
+                                  default value is 0 which indicates that no timeout
+                                  is set.@@'
+                                title: Default Timeout Microseconds
+                                type: string
+                              max_queue_size:
+                                default: null
+                                description: '@@@@  .. cpp:var:: uint32 max_queue_size@@@@     The
+                                  maximum queue size for holding requests. A request
+                                  will be@@     rejected immediately if it can''t
+                                  be enqueued because the queue is@@     full. The
+                                  default value is 0 which indicates that no maximum@@     queue
+                                  size is enforced.@@'
+                                title: Max Queue Size
+                                type: integer
+                              timeout_action:
+                                default: null
+                                description: '@@@@  .. cpp:enum:: TimeoutAction@@@@     The
+                                  action applied to timed-out requests.@@'
+                                enum:
+                                - REJECT
+                                - 0
+                                - DELAY
+                                - 1
+                                title: Timeout Action
+                                type: string
+                            title: DefaultQueuePolicy
+                            type: object
+                          max_queue_delay_microseconds:
+                            default: null
+                            description: '@@  .. cpp:var:: uint64 max_queue_delay_microseconds@@@@     The
+                              maximum time, in microseconds, a request will be delayed
+                              in@@     the scheduling queue to wait for additional
+                              requests for@@     batching. Default is 0.@@'
+                            title: Max Queue Delay Microseconds
+                            type: string
+                          preferred_batch_size:
+                            default: null
+                            description: '@@  .. cpp:var:: int32 preferred_batch_size
+                              (repeated)@@@@     Preferred batch sizes for dynamic
+                              batching. If a batch of one of@@     these sizes can
+                              be formed it will be executed immediately.  If@@     not
+                              specified a preferred batch size will be chosen automatically@@     based
+                              on model and GPU characteristics.@@'
+                            items:
+                              type: integer
+                            title: Preferred Batch Size
+                            type: array
+                          preserve_ordering:
+                            default: null
+                            description: '@@  .. cpp:var:: bool preserve_ordering@@@@     Should
+                              the dynamic batcher preserve the ordering of responses
+                              to@@     match the order of requests received by the
+                              scheduler. Default is@@     false. If true, the responses
+                              will be returned in the same order as@@     the order
+                              of requests sent to the scheduler. If false, the responses@@     may
+                              be returned in arbitrary order. This option is specifically@@     needed
+                              when a sequence of related inference requests (i.e.
+                              inference@@     requests with the same correlation ID)
+                              are sent to the dynamic@@     batcher to ensure that
+                              the sequence responses are in the correct@@     order.@@'
+                            title: Preserve Ordering
+                            type: boolean
+                          priority_levels:
+                            default: null
+                            description: '@@  .. cpp:var:: uint64 priority_levels@@@@     The
+                              number of priority levels to be enabled for the model,@@     the
+                              priority level starts from 1 and 1 is the highest priority.@@     Requests
+                              are handled in priority order with all priority 1 requests@@     processed
+                              before priority 2, all priority 2 requests processed
+                              before@@     priority 3, etc. Requests with the same
+                              priority level will be@@     handled in the order that
+                              they are received.@@'
+                            title: Priority Levels
+                            type: string
+                          priority_queue_policy:
+                            additionalProperties:
+                              additionalProperties: true
+                              properties:
+                                allow_timeout_override:
+                                  default: null
+                                  description: '@@@@  .. cpp:var:: bool allow_timeout_override@@@@     Whether
+                                    individual request can override the default timeout
+                                    value.@@     When true, individual requests can
+                                    set a timeout that is less than@@     the default
+                                    timeout value but may not increase the timeout.@@     The
+                                    default value is false.@@'
+                                  title: Allow Timeout Override
+                                  type: boolean
+                                default_timeout_microseconds:
+                                  default: null
+                                  description: '@@@@  .. cpp:var:: uint64 default_timeout_microseconds@@@@     The
+                                    default timeout for every request, in microseconds.@@     The
+                                    default value is 0 which indicates that no timeout
+                                    is set.@@'
+                                  title: Default Timeout Microseconds
+                                  type: string
+                                max_queue_size:
+                                  default: null
+                                  description: '@@@@  .. cpp:var:: uint32 max_queue_size@@@@     The
+                                    maximum queue size for holding requests. A request
+                                    will be@@     rejected immediately if it can''t
+                                    be enqueued because the queue is@@     full. The
+                                    default value is 0 which indicates that no maximum@@     queue
+                                    size is enforced.@@'
+                                  title: Max Queue Size
+                                  type: integer
+                                timeout_action:
+                                  default: null
+                                  description: '@@@@  .. cpp:enum:: TimeoutAction@@@@     The
+                                    action applied to timed-out requests.@@'
+                                  enum:
+                                  - REJECT
+                                  - 0
+                                  - DELAY
+                                  - 1
+                                  title: Timeout Action
+                                  type: string
+                              title: PriorityQueuePolicy
+                              type: object
+                            default: null
+                            description: '@@  .. cpp:var:: map<uint64, ModelQueuePolicy>
+                              priority_queue_policy@@@@     Specify the queue policy
+                              for the priority level. The default queue@@     policy
+                              will be used if a priority level doesn''t specify a
+                              queue@@     policy.@@'
+                            title: Priority Queue Policy
+                            type: object
+                        title: DynamicBatching
+                        type: object
+                      ensemble_scheduling:
+                        additionalProperties: true
+                        properties:
+                          step:
+                            default: null
+                            description: '@@  .. cpp:var:: Step step (repeated)@@@@     The
+                              models and the input / output mappings used within the
+                              ensemble.@@'
+                            items:
+                              additionalProperties: true
+                              properties:
+                                input_map:
+                                  additionalProperties:
+                                    type: string
+                                  default: null
+                                  description: '@@  .. cpp:var:: map<string,string>
+                                    input_map@@@@     Map from name of an input tensor
+                                    on this step''s model to ensemble@@     tensor
+                                    name. The ensemble tensor must have the same data
+                                    type and@@     shape as the model input. Each
+                                    model input must be assigned to@@     one ensemble
+                                    tensor, but the same ensemble tensor can be assigned@@     to
+                                    multiple model inputs.@@'
+                                  title: Input Map
+                                  type: object
+                                model_name:
+                                  default: null
+                                  description: '@@  .. cpp:var:: string model_name@@@@     The
+                                    name of the model to execute for this step of
+                                    the ensemble.@@'
+                                  title: Model Name
+                                  type: string
+                                model_namespace:
+                                  default: null
+                                  description: '@@  .. cpp:var:: string model_namespace@@@@     [RESERVED]
+                                    currently this field is reserved for internal
+                                    use, users@@     must not set any value to this
+                                    field to avoid unexpected behavior.@@'
+                                  title: Model Namespace
+                                  type: string
+                                model_version:
+                                  default: null
+                                  description: '@@  .. cpp:var:: int64 model_version@@@@     The
+                                    version of the model to use for inference. If
+                                    -1@@     the latest/most-recent version of the
+                                    model is used.@@'
+                                  title: Model Version
+                                  type: string
+                                output_map:
+                                  additionalProperties:
+                                    type: string
+                                  default: null
+                                  description: '@@  .. cpp:var:: map<string,string>
+                                    output_map@@@@     Map from name of an output
+                                    tensor on this step''s model to ensemble@@     tensor
+                                    name. The data type and shape of the ensemble
+                                    tensor will@@     be inferred from the model output.
+                                    It is optional to assign all@@     model outputs
+                                    to ensemble tensors. One ensemble tensor name@@     can
+                                    appear in an output map only once.@@'
+                                  title: Output Map
+                                  type: object
+                              title: StepItem
+                              type: object
+                            title: Step
+                            type: array
+                        title: EnsembleScheduling
+                        type: object
+                      input:
+                        default: null
+                        description: '@@  .. cpp:var:: ModelInput input (repeated)@@@@     The
+                          inputs request by the model.@@'
+                        items:
+                          additionalProperties: true
+                          properties:
+                            allow_ragged_batch:
+                              default: null
+                              description: '@@  .. cpp:var:: bool allow_ragged_batch@@@@     Whether
+                                or not the input is allowed to be "ragged" in a dynamically@@     created
+                                batch. Default is false indicating that two requests
+                                will@@     only be batched if this tensor has the
+                                same shape in both requests.@@     True indicates
+                                that two requests can be batched even if this tensor@@     has
+                                a different shape in each request.@@'
+                              title: Allow Ragged Batch
+                              type: boolean
+                            data_type:
+                              default: null
+                              description: '@@.. cpp:namespace:: inference  @@@@..
+                                cpp:enum:: DataType@@@@   Data types supported for
+                                input and output tensors.@@'
+                              enum:
+                              - TYPE_INVALID
+                              - 0
+                              - TYPE_BOOL
+                              - 1
+                              - TYPE_UINT8
+                              - 2
+                              - TYPE_UINT16
+                              - 3
+                              - TYPE_UINT32
+                              - 4
+                              - TYPE_UINT64
+                              - 5
+                              - TYPE_INT8
+                              - 6
+                              - TYPE_INT16
+                              - 7
+                              - TYPE_INT32
+                              - 8
+                              - TYPE_INT64
+                              - 9
+                              - TYPE_FP16
+                              - 10
+                              - TYPE_FP32
+                              - 11
+                              - TYPE_FP64
+                              - 12
+                              - TYPE_STRING
+                              - 13
+                              - TYPE_BF16
+                              - 14
+                              title: '@@.. cpp:namespace:: inference'
+                              type: string
+                            dims:
+                              default: null
+                              description: '@@  .. cpp:var:: int64 dims (repeated)@@@@     The
+                                dimensions/shape of the input tensor that must be
+                                provided@@     when invoking the inference API for
+                                this model.@@'
+                              items:
+                                type: string
+                              title: Dims
+                              type: array
+                            format:
+                              default: null
+                              description: '@@@@  .. cpp:enum:: Format@@@@     The
+                                format for the input.@@'
+                              enum:
+                              - FORMAT_NONE
+                              - 0
+                              - FORMAT_NHWC
+                              - 1
+                              - FORMAT_NCHW
+                              - 2
+                              title: Format
+                              type: string
+                            is_shape_tensor:
+                              default: null
+                              description: '@@  .. cpp:var:: bool is_shape_tensor@@@@     Whether
+                                or not the input is a shape tensor to the model. This
+                                field@@     is currently supported only for the TensorRT
+                                model. An error will be@@     generated if this specification
+                                does not comply with underlying@@     model.@@'
+                              title: Is Shape Tensor
+                              type: boolean
+                            name:
+                              default: null
+                              description: '@@  .. cpp:var:: string name@@@@     The
+                                name of the input.@@'
+                              title: Name
+                              type: string
+                            optional:
+                              default: null
+                              description: '@@  .. cpp:var:: bool optional@@@@     Whether
+                                or not the input is optional for the model execution.@@     If
+                                true, the input is not required in the inference request.@@     Default
+                                value is false.@@'
+                              title: Optional
+                              type: boolean
+                            reshape:
+                              additionalProperties: true
+                              properties:
+                                shape:
+                                  default: null
+                                  description: '@@  .. cpp:var:: int64 shape (repeated)@@@@     The
+                                    shape to use for reshaping.@@'
+                                  items:
+                                    type: string
+                                  title: Shape
+                                  type: array
+                              title: Reshape
+                              type: object
+                          title: InputItem
+                          type: object
+                        title: Input
+                        type: array
+                      instance_group:
+                        default: null
+                        description: '@@  .. cpp:var:: ModelInstanceGroup instance_group
+                          (repeated)@@@@     Instances of this model. If not specified,
+                          one instance@@     of the model will be instantiated on
+                          each available GPU.@@'
+                        items:
+                          additionalProperties: true
+                          properties:
+                            count:
+                              default: null
+                              description: '@@  .. cpp:var:: int32 count@@@@     For
+                                a group assigned to GPU, the number of instances created
+                                for@@     each GPU listed in ''gpus''. For a group
+                                assigned to CPU the number@@     of instances created.
+                                Default is 1.'
+                              title: Count
+                              type: integer
+                            gpus:
+                              default: null
+                              description: '@@  .. cpp:var:: int32 gpus (repeated)@@@@     GPU(s)
+                                where instances should be available. For each GPU
+                                listed,@@     ''count'' instances of the model will
+                                be available. Setting ''gpus''@@     to empty (or
+                                not specifying at all) is equivalent to listing all@@     available
+                                GPUs.@@'
+                              items:
+                                type: integer
+                              title: Gpus
+                              type: array
+                            host_policy:
+                              default: null
+                              description: '@@  .. cpp:var:: string host_policy@@@@     The
+                                host policy name that the instance to be associated
+                                with.@@     The default value is set to reflect the
+                                device kind of the instance,@@     for instance, KIND_CPU
+                                is "cpu", KIND_MODEL is "model" and@@     KIND_GPU
+                                is "gpu_<gpu_id>".@@'
+                              title: Host Policy
+                              type: string
+                            kind:
+                              default: null
+                              description: '@@@@  .. cpp:enum:: Kind@@@@     Kind
+                                of this instance group.@@'
+                              enum:
+                              - KIND_AUTO
+                              - 0
+                              - KIND_GPU
+                              - 1
+                              - KIND_CPU
+                              - 2
+                              - KIND_MODEL
+                              - 3
+                              title: Kind
+                              type: string
+                            name:
+                              default: null
+                              description: '@@  .. cpp:var:: string name@@@@     Optional
+                                name of this group of instances. If not specified
+                                the@@     name will be formed as <model name>_<group
+                                number>. The name of@@     individual instances will
+                                be further formed by a unique instance@@     number
+                                and GPU index:@@'
+                              title: Name
+                              type: string
+                            passive:
+                              default: null
+                              description: '@@  .. cpp:var:: bool passive@@@@     Whether
+                                the instances within this instance group will be accepting@@     inference
+                                requests from the scheduler. If true, the instances
+                                will@@     not be added to the scheduler. Default
+                                value is false.@@'
+                              title: Passive
+                              type: boolean
+                            profile:
+                              default: null
+                              description: '@@  .. cpp:var:: string profile (repeated)@@@@     For
+                                TensorRT models containing multiple optimization profile,
+                                this@@     parameter specifies a set of optimization
+                                profiles available to this@@     instance group. The
+                                inference server will choose the optimal profile@@     based
+                                on the shapes of the input tensors. This field should
+                                lie@@     between 0 and <TotalNumberOfOptimizationProfilesInPlanModel>
+                                - 1@@     and be specified only for TensorRT backend,
+                                otherwise an error will@@     be generated. If not
+                                specified, the server will select the first@@     optimization
+                                profile by default.@@'
+                              items:
+                                type: string
+                              title: Profile
+                              type: array
+                            rate_limiter:
+                              additionalProperties: true
+                              properties:
+                                priority:
+                                  default: null
+                                  description: '@@  .. cpp:var:: uint32 priority@@@@     The
+                                    optional weighting value to be used for prioritizing
+                                    across@@     instances. An instance with priority
+                                    2 will be given 1/2 the@@     number of scheduling
+                                    chances as an instance_group with priority@@     1.
+                                    The default priority is 1. The priority of value
+                                    0 will be@@     treated as priority 1.@@'
+                                  title: Priority
+                                  type: integer
+                                resources:
+                                  default: null
+                                  description: '@@  .. cpp:var:: Resource resources
+                                    (repeated)@@@@     The resources required to execute
+                                    the request on a model instance.@@     Resources
+                                    are just names with a corresponding count. The
+                                    execution@@     of the instance will be blocked
+                                    until the specified resources are@@     available.
+                                    By default an instance uses no rate-limiter resources.@@'
+                                  items:
+                                    additionalProperties: true
+                                    properties:
+                                      count:
+                                        default: null
+                                        description: '@@  .. cpp:var:: uint32 count@@@@     The
+                                          number of resources required for the execution
+                                          of the model@@     instance.@@'
+                                        title: Count
+                                        type: integer
+                                      global:
+                                        default: null
+                                        description: '@@  .. cpp:var:: bool global@@@@     Whether
+                                          or not the resource is global. If true then
+                                          the resource@@     is assumed to be shared
+                                          among the devices otherwise specified@@     count
+                                          of the resource is assumed for each device
+                                          associated@@     with the instance.@@'
+                                        title: Global
+                                        type: boolean
+                                      name:
+                                        default: null
+                                        description: '@@  .. cpp:var:: string name@@@@     The
+                                          name associated with the resource.@@'
+                                        title: Name
+                                        type: string
+                                    title: Resource
+                                    type: object
+                                  title: Resources
+                                  type: array
+                              title: RateLimiter
+                              type: object
+                            secondary_devices:
+                              default: null
+                              description: '@@  .. cpp:var:: SecondaryDevice secondary_devices
+                                (repeated)@@@@     Secondary devices that are required
+                                by instances specified by this@@     instance group.
+                                Optional.@@'
+                              items:
+                                additionalProperties: true
+                                properties:
+                                  device_id:
+                                    default: null
+                                    description: '@@  .. cpp:var:: int64 device_id@@@@     Identifier
+                                      for the secondary device.@@'
+                                    title: Device Id
+                                    type: string
+                                  kind:
+                                    default: null
+                                    description: '@@@@  .. cpp:enum:: SecondaryDeviceKind@@@@     The
+                                      kind of the secondary device.@@'
+                                    enum:
+                                    - KIND_NVDLA
+                                    - 0
+                                    title: Secondary Device Kind
+                                    type: string
+                                title: SecondaryDevice
+                                type: object
+                              title: Secondary Devices
+                              type: array
+                          title: InstanceGroupItem
+                          type: object
+                        title: Instance Group
+                        type: array
+                      max_batch_size:
+                        default: null
+                        description: '@@  .. cpp:var:: int32 max_batch_size@@@@     Maximum
+                          batch size allowed for inference. This can only decrease@@     what
+                          is allowed by the model itself. A max_batch_size value of
+                          0@@     indicates that batching is not allowed for the model
+                          and the@@     dimension/shape of the input and output tensors
+                          must exactly@@     match what is specified in the input
+                          and output configuration. A@@     max_batch_size value >
+                          0 indicates that batching is allowed and@@     so the model
+                          expects the input tensors to have an additional@@     initial
+                          dimension for the batching that is not specified in the@@     input
+                          (for example, if the model supports batched inputs of@@     2-dimensional
+                          tensors then the model configuration will specify@@     the
+                          input shape as [ X, Y ] but the model will expect the actual@@     input
+                          tensors to have shape [ N, X, Y ]). For max_batch_size >
+                          0@@     returned outputs will also have an additional initial
+                          dimension@@     for the batch.@@'
+                        title: Max Batch Size
+                        type: integer
+                      metric_tags:
+                        additionalProperties:
+                          type: string
+                        default: null
+                        description: '@@  .. cpp:var:: map<string,string> metric_tags@@@@     Optional
+                          metric tags. User-specific key-value pairs for metrics@@     reported
+                          for this model. These tags are applied to the metrics@@     reported
+                          on the HTTP metrics port.@@'
+                        title: Metric Tags
+                        type: object
+                      model_operations:
+                        additionalProperties: true
+                        properties:
+                          op_library_filename:
+                            default: null
+                            description: '@@  .. cpp:var:: string op_library_filename
+                              (repeated)@@@@     Optional paths of the libraries providing
+                              custom operations for@@     this model. Valid only for
+                              ONNX models.@@'
+                            items:
+                              type: string
+                            title: Op Library Filename
+                            type: array
+                        title: ModelOperations
+                        type: object
+                      model_repository_agents:
+                        additionalProperties: true
+                        properties:
+                          agents:
+                            default: null
+                            description: '@@@@  .. cpp:var:: Agent agents (repeated)@@@@     The
+                              ordered list of agents for the model. These agents will
+                              be@@     invoked in order to respond to repository actions
+                              occurring for the@@     model.@@'
+                            items:
+                              additionalProperties: true
+                              properties:
+                                name:
+                                  default: null
+                                  description: '@@    .. cpp:var:: string name@@@@       The
+                                    name of the agent.@@'
+                                  title: Name
+                                  type: string
+                                parameters:
+                                  additionalProperties:
+                                    type: string
+                                  default: null
+                                  description: '@@    .. cpp:var:: map<string, string>
+                                    parameters@@@@       The parameters for the agent.@@'
+                                  title: Parameters
+                                  type: object
+                              title: Agent
+                              type: object
+                            title: Agents
+                            type: array
+                        title: ModelRepositoryAgents
+                        type: object
+                      model_transaction_policy:
+                        additionalProperties: true
+                        properties:
+                          decoupled:
+                            default: null
+                            description: '@@  .. cpp:var:: bool decoupled@@@@     Indicates
+                              whether responses generated by the model are decoupled
+                              with@@     the requests issued to it, which means the
+                              number of responses@@     generated by model may differ
+                              from number of requests issued, and@@     that the responses
+                              may be out of order relative to the order of@@     requests.
+                              The default is false, which means the model will generate@@     exactly
+                              one response for each request.@@'
+                            title: Decoupled
+                            type: boolean
+                        title: ModelTransactionPolicy
+                        type: object
+                      model_warmup:
+                        default: null
+                        description: '@@  .. cpp:var:: ModelWarmup model_warmup (repeated)@@@@     Warmup
+                          setting of this model. If specified, all instances@@     will
+                          be run with the request samples in sequence before@@     serving
+                          the model.@@     This field can only be specified if the
+                          model is not an ensemble@@     model.@@'
+                        items:
+                          additionalProperties: true
+                          properties:
+                            batch_size:
+                              default: null
+                              description: '@@  .. cpp:var:: uint32 batch_size@@@@     The
+                                batch size of the inference request. This must be
+                                >= 1. For@@     models that don''t support batching,
+                                batch_size must be 1. If@@     batch_size > 1, the
+                                ''inputs'' specified below will be duplicated to@@     match
+                                the batch size requested.@@'
+                              title: Batch Size
+                              type: integer
+                            count:
+                              default: null
+                              description: '@@  .. cpp:var:: uint32 count@@@@     The
+                                number of iterations that this warmup sample will
+                                be executed.@@     For example, if this field is set
+                                to 2, 2 model executions using this@@     sample will
+                                be scheduled for warmup. Default value is 0 which@@     indicates
+                                that this sample will be used only once.@@     Note
+                                that for sequence model, ''count'' may not work well@@     because
+                                the model often expect a valid sequence of requests
+                                which@@     should be represented by a series of warmup
+                                samples. ''count > 1''@@     essentially "resends"
+                                one of the sample, which may invalidate the@@     sequence
+                                and result in unexpected warmup failure.@@'
+                              title: Count
+                              type: integer
+                            inputs:
+                              additionalProperties:
+                                additionalProperties: true
+                                properties:
+                                  data_type:
+                                    default: null
+                                    description: '@@.. cpp:namespace:: inference  @@@@..
+                                      cpp:enum:: DataType@@@@   Data types supported
+                                      for input and output tensors.@@'
+                                    enum:
+                                    - TYPE_INVALID
+                                    - 0
+                                    - TYPE_BOOL
+                                    - 1
+                                    - TYPE_UINT8
+                                    - 2
+                                    - TYPE_UINT16
+                                    - 3
+                                    - TYPE_UINT32
+                                    - 4
+                                    - TYPE_UINT64
+                                    - 5
+                                    - TYPE_INT8
+                                    - 6
+                                    - TYPE_INT16
+                                    - 7
+                                    - TYPE_INT32
+                                    - 8
+                                    - TYPE_INT64
+                                    - 9
+                                    - TYPE_FP16
+                                    - 10
+                                    - TYPE_FP32
+                                    - 11
+                                    - TYPE_FP64
+                                    - 12
+                                    - TYPE_STRING
+                                    - 13
+                                    - TYPE_BF16
+                                    - 14
+                                    title: '@@.. cpp:namespace:: inference'
+                                    type: string
+                                  dims:
+                                    default: null
+                                    description: '@@    .. cpp:var:: int64 dims (repeated)@@@@       The
+                                      shape of the input tensor, not including the
+                                      batch dimension.@@'
+                                    items:
+                                      type: string
+                                    title: Dims
+                                    type: array
+                                  input_data_file:
+                                    default: null
+                                    description: '@@    .. cpp:var:: string input_data_file@@@@       The
+                                      file whose content will be used as raw input
+                                      data in@@       row-major order. The file must
+                                      be provided in a sub-directory@@       ''warmup''
+                                      under the model directory. The file contents
+                                      should be@@       in binary format. For TYPE_STRING
+                                      data-type, an element is@@       represented
+                                      by a 4-byte unsigned integer giving the length@@       followed
+                                      by the actual bytes.@@'
+                                    title: Input Data File
+                                    type: string
+                                  random_data:
+                                    default: null
+                                    description: '@@@@    .. cpp:var:: bool random_data@@@@       The
+                                      identifier for using random data as input data.
+                                      Note that@@       the value of ''random_data''
+                                      will not be checked, instead,@@       random
+                                      data will be used as long as the field is set.@@'
+                                    title: Random Data
+                                    type: boolean
+                                  zero_data:
+                                    default: null
+                                    description: '@@@@    .. cpp:var:: bool zero_data@@@@       The
+                                      identifier for using zeros as input data. Note
+                                      that the@@       value of ''zero_data'' will
+                                      not be checked, instead, zero data@@       will
+                                      be used as long as the field is set.@@'
+                                    title: Zero Data
+                                    type: boolean
+                                title: Inputs
+                                type: object
+                              default: null
+                              description: '@@  .. cpp:var:: map<string, Input> inputs@@@@     The
+                                warmup meta data associated with every model input,
+                                including@@     control tensors.@@'
+                              title: Inputs
+                              type: object
+                            name:
+                              default: null
+                              description: '@@  .. cpp:var:: string name@@@@     The
+                                name of the request sample.@@'
+                              title: Name
+                              type: string
+                          title: ModelWarmupItem
+                          type: object
+                        title: Model Warmup
+                        type: array
+                      name:
+                        default: null
+                        description: '@@  .. cpp:var:: string name@@@@     The name
+                          of the model.@@'
+                        title: Name
+                        type: string
+                      optimization:
+                        additionalProperties: true
+                        properties:
+                          cuda:
+                            additionalProperties: true
+                            properties:
+                              busy_wait_events:
+                                default: null
+                                description: '@@    .. cpp:var:: bool busy_wait_events@@@@       Use
+                                  busy-waiting to synchronize CUDA events to achieve
+                                  minimum@@       latency from event complete to host
+                                  thread to be notified, with@@       the cost of
+                                  high CPU load. Default value is false.@@       Currently
+                                  only recognized by TensorRT backend.@@'
+                                title: Busy Wait Events
+                                type: boolean
+                              graph_spec:
+                                default: null
+                                description: '@@    .. cpp:var:: GraphSpec graph_spec
+                                  (repeated)@@@@       Specification of the CUDA graph
+                                  to be captured. If not specified@@       and ''graphs''
+                                  is true, the default CUDA graphs will be captured@@       based
+                                  on model settings.@@       Currently only recognized
+                                  by TensorRT backend.@@'
+                                items:
+                                  additionalProperties: true
+                                  properties:
+                                    batch_size:
+                                      default: null
+                                      description: '@@      .. cpp:var:: int32 batch_size@@@@         The
+                                        batch size of the CUDA graph. If ''max_batch_size''
+                                        is 0,@@         ''batch_size'' must be set
+                                        to 0. Otherwise, ''batch_size'' must@@         be
+                                        set to value between 1 and ''max_batch_size''.@@'
+                                      title: Batch Size
+                                      type: integer
+                                    graph_lower_bound:
+                                      additionalProperties: true
+                                      properties:
+                                        batch_size:
+                                          default: null
+                                          description: '@@      .. cpp:var:: int32
+                                            batch_size@@@@         The batch size
+                                            of the CUDA graph. If ''max_batch_size''
+                                            is 0,@@         ''batch_size'' must be
+                                            set to 0. Otherwise, ''batch_size'' must@@         be
+                                            set to value between 1 and ''max_batch_size''.@@'
+                                          title: Batch Size
+                                          type: integer
+                                        input:
+                                          additionalProperties:
+                                            additionalProperties: true
+                                            properties:
+                                              dim:
+                                                default: null
+                                                description: '@@        .. cpp:var::
+                                                  int64 dim (repeated)@@@@           The
+                                                  dimension.@@'
+                                                items:
+                                                  type: string
+                                                title: Dim
+                                                type: array
+                                            title: Input
+                                            type: object
+                                          default: null
+                                          description: '@@      .. cpp:var:: map<string,
+                                            Shape> input@@@@         The specification
+                                            of the inputs. ''Shape'' is the shape
+                                            of@@         the input without batching
+                                            dimension.@@'
+                                          title: Input
+                                          type: object
+                                      title: GraphLowerBound
+                                      type: object
+                                    input:
+                                      additionalProperties:
+                                        additionalProperties: true
+                                        properties:
+                                          dim:
+                                            default: null
+                                            description: '@@        .. cpp:var:: int64
+                                              dim (repeated)@@@@           The dimension.@@'
+                                            items:
+                                              type: string
+                                            title: Dim
+                                            type: array
+                                        title: Input
+                                        type: object
+                                      default: null
+                                      description: '@@      .. cpp:var:: map<string,
+                                        Shape> input@@@@         The specification
+                                        of the inputs. ''Shape'' is the shape of the@@         input
+                                        without batching dimension.@@'
+                                      title: Input
+                                      type: object
+                                  title: GraphSpecItem
+                                  type: object
+                                title: Graph Spec
+                                type: array
+                              graphs:
+                                default: null
+                                description: '@@    .. cpp:var:: bool graphs@@@@       Use
+                                  CUDA graphs API to capture model operations and
+                                  execute@@       them more efficiently. Default value
+                                  is false.@@       Currently only recognized by TensorRT
+                                  backend.@@'
+                                title: Graphs
+                                type: boolean
+                              output_copy_stream:
+                                default: null
+                                description: '@@    .. cpp:var:: bool output_copy_stream@@@@       Uses
+                                  a CUDA stream separate from the inference stream
+                                  to copy the@@       output to host. However, be
+                                  aware that setting this option to@@       true will
+                                  lead to an increase in the memory consumption of
+                                  the@@       model as Triton will allocate twice
+                                  as much GPU memory for its@@       I/O tensor buffers.
+                                  Default value is false.@@       Currently only recognized
+                                  by TensorRT backend.@@'
+                                title: Output Copy Stream
+                                type: boolean
+                            title: Cuda
+                            type: object
+                          eager_batching:
+                            default: null
+                            description: '@@  .. cpp:var:: bool eager_batching@@@@     Start
+                              preparing the next batch before the model instance is
+                              ready@@     for the next inference. This option can
+                              be used to overlap the@@     batch preparation with
+                              model execution, with the trade-off that@@     the next
+                              batch might be smaller than what it could have been.@@     Default
+                              value is false.@@     Currently only recognized by TensorRT
+                              backend.@@'
+                            title: Eager Batching
+                            type: boolean
+                          execution_accelerators:
+                            additionalProperties: true
+                            properties:
+                              cpu_execution_accelerator:
+                                default: null
+                                description: '@@    .. cpp:var:: Accelerator cpu_execution_accelerator
+                                  (repeated)@@@@       The preferred execution provider
+                                  to be used if the model instance@@       is deployed
+                                  on CPU.@@@@       For ONNX Runtime backend, possible
+                                  value is "openvino" as name,@@       and no parameters
+                                  are required.@@'
+                                items:
+                                  additionalProperties: true
+                                  properties:
+                                    name:
+                                      default: null
+                                      description: '@@    .. cpp:var:: string name@@@@       The
+                                        name of the execution accelerator.@@'
+                                      title: Name
+                                      type: string
+                                    parameters:
+                                      additionalProperties:
+                                        type: string
+                                      default: null
+                                      description: '@@    .. cpp:var:: map<string,
+                                        string> parameters@@@@       Additional parameters
+                                        used to configure the accelerator.@@'
+                                      title: Parameters
+                                      type: object
+                                  title: CpuExecutionAcceleratorItem
+                                  type: object
+                                title: Cpu Execution Accelerator
+                                type: array
+                              gpu_execution_accelerator:
+                                default: null
+                                description: '@@    .. cpp:var:: Accelerator gpu_execution_accelerator
+                                  (repeated)@@@@       The preferred execution provider
+                                  to be used if the model instance@@       is deployed
+                                  on GPU.@@@@       For ONNX Runtime backend, possible
+                                  value is "tensorrt" as name,@@       and no parameters
+                                  are required.@@@@       For TensorFlow backend,
+                                  possible values are "tensorrt",@@       "auto_mixed_precision",
+                                  "gpu_io".@@@@       For "tensorrt", the following
+                                  parameters can be specified:@@         "precision_mode":
+                                  The precision used for optimization.@@         Allowed
+                                  values are "FP32" and "FP16". Default value is "FP32".@@@@         "max_cached_engines":
+                                  The maximum number of cached TensorRT@@         engines
+                                  in dynamic TensorRT ops. Default value is 100.@@@@         "minimum_segment_size":
+                                  The smallest model subgraph that will@@         be
+                                  considered for optimization by TensorRT. Default
+                                  value is 3.@@@@         "max_workspace_size_bytes":
+                                  The maximum GPU memory the model@@         can use
+                                  temporarily during execution. Default value is 1GB.@@@@       For
+                                  "auto_mixed_precision", no parameters are required.
+                                  If set,@@       the model will try to use FP16 for
+                                  better performance.@@       This optimization can
+                                  not be set with "tensorrt".@@@@       For "gpu_io",
+                                  no parameters are required. If set, the model will@@       be
+                                  executed using TensorFlow Callable API to set input
+                                  and output@@       tensors in GPU memory if possible,
+                                  which can reduce data transfer@@       overhead
+                                  if the model is used in ensemble. However, the Callable@@       object
+                                  will be created on model creation and it will request
+                                  all@@       outputs for every model execution, which
+                                  may impact the@@       performance if a request
+                                  does not require all outputs. This@@       optimization
+                                  will only take affect if the model instance is@@       created
+                                  with KIND_GPU.@@'
+                                items:
+                                  additionalProperties: true
+                                  properties:
+                                    name:
+                                      default: null
+                                      description: '@@    .. cpp:var:: string name@@@@       The
+                                        name of the execution accelerator.@@'
+                                      title: Name
+                                      type: string
+                                    parameters:
+                                      additionalProperties:
+                                        type: string
+                                      default: null
+                                      description: '@@    .. cpp:var:: map<string,
+                                        string> parameters@@@@       Additional parameters
+                                        used to configure the accelerator.@@'
+                                      title: Parameters
+                                      type: object
+                                  title: GpuExecutionAcceleratorItem
+                                  type: object
+                                title: Gpu Execution Accelerator
+                                type: array
+                            title: ExecutionAccelerators
+                            type: object
+                          gather_kernel_buffer_threshold:
+                            default: null
+                            description: '@@  .. cpp:var:: uint32 gather_kernel_buffer_threshold@@@@     The
+                              backend may use a gather kernel to gather input data
+                              if the@@     device has direct access to the source
+                              buffer and the destination@@     buffer. In such case,
+                              the gather kernel will be used only if the@@     number
+                              of buffers to be gathered is greater or equal to@@     the
+                              specified value. If 0, the gather kernel will be disabled.@@     Default
+                              value is 0.@@     Currently only recognized by TensorRT
+                              backend.@@'
+                            title: Gather Kernel Buffer Threshold
+                            type: integer
+                          graph:
+                            additionalProperties: true
+                            properties:
+                              level:
+                                default: null
+                                description: '@@    .. cpp:var:: int32 level@@@@       The
+                                  optimization level. Defaults to 0 (zero) if not
+                                  specified.@@@@         - -1: Disabled@@         -  0:
+                                  Framework default@@         -  1+: Enable optimization
+                                  level (greater values indicate@@            higher
+                                  optimization levels)@@'
+                                title: Level
+                                type: integer
+                            title: Graph
+                            type: object
+                          input_pinned_memory:
+                            additionalProperties: true
+                            properties:
+                              enable:
+                                default: null
+                                description: '@@    .. cpp:var:: bool enable@@@@       Use
+                                  pinned memory buffer. Default is true.@@'
+                                title: Enable
+                                type: boolean
+                            title: InputPinnedMemory
+                            type: object
+                          output_pinned_memory:
+                            additionalProperties: true
+                            properties:
+                              enable:
+                                default: null
+                                description: '@@    .. cpp:var:: bool enable@@@@       Use
+                                  pinned memory buffer. Default is true.@@'
+                                title: Enable
+                                type: boolean
+                            title: OutputPinnedMemory
+                            type: object
+                          priority:
+                            default: null
+                            description: '@@@@  .. cpp:enum:: ModelPriority@@@@     Model
+                              priorities. A model will be given scheduling and execution@@     preference
+                              over models at lower priorities. Current model@@     priorities
+                              only work for TensorRT models.@@'
+                            enum:
+                            - PRIORITY_DEFAULT
+                            - 0
+                            - PRIORITY_MAX
+                            - 1
+                            - PRIORITY_MIN
+                            - 2
+                            title: Model Priority
+                            type: string
+                        title: Optimization
+                        type: object
+                      output:
+                        default: null
+                        description: '@@  .. cpp:var:: ModelOutput output (repeated)@@@@     The
+                          outputs produced by the model.@@'
+                        items:
+                          additionalProperties: true
+                          properties:
+                            data_type:
+                              default: null
+                              description: '@@.. cpp:namespace:: inference  @@@@..
+                                cpp:enum:: DataType@@@@   Data types supported for
+                                input and output tensors.@@'
+                              enum:
+                              - TYPE_INVALID
+                              - 0
+                              - TYPE_BOOL
+                              - 1
+                              - TYPE_UINT8
+                              - 2
+                              - TYPE_UINT16
+                              - 3
+                              - TYPE_UINT32
+                              - 4
+                              - TYPE_UINT64
+                              - 5
+                              - TYPE_INT8
+                              - 6
+                              - TYPE_INT16
+                              - 7
+                              - TYPE_INT32
+                              - 8
+                              - TYPE_INT64
+                              - 9
+                              - TYPE_FP16
+                              - 10
+                              - TYPE_FP32
+                              - 11
+                              - TYPE_FP64
+                              - 12
+                              - TYPE_STRING
+                              - 13
+                              - TYPE_BF16
+                              - 14
+                              title: '@@.. cpp:namespace:: inference'
+                              type: string
+                            dims:
+                              default: null
+                              description: '@@  .. cpp:var:: int64 dims (repeated)@@@@     The
+                                dimensions/shape of the output tensor.@@'
+                              items:
+                                type: string
+                              title: Dims
+                              type: array
+                            is_shape_tensor:
+                              default: null
+                              description: '@@  .. cpp:var:: bool is_shape_tensor@@@@     Whether
+                                or not the output is a shape tensor to the model.
+                                This field@@     is currently supported only for the
+                                TensorRT model. An error will be@@     generated if
+                                this specification does not comply with underlying@@     model.@@'
+                              title: Is Shape Tensor
+                              type: boolean
+                            label_filename:
+                              default: null
+                              description: '@@  .. cpp:var:: string label_filename@@@@     The
+                                label file associated with this output. Should be
+                                specified only@@     for outputs that represent classifications.
+                                Optional.@@'
+                              title: Label Filename
+                              type: string
+                            name:
+                              default: null
+                              description: '@@  .. cpp:var:: string name@@@@     The
+                                name of the output.@@'
+                              title: Name
+                              type: string
+                            reshape:
+                              additionalProperties: true
+                              properties:
+                                shape:
+                                  default: null
+                                  description: '@@  .. cpp:var:: int64 shape (repeated)@@@@     The
+                                    shape to use for reshaping.@@'
+                                  items:
+                                    type: string
+                                  title: Shape
+                                  type: array
+                              title: Reshape
+                              type: object
+                          title: OutputItem
+                          type: object
+                        title: Output
+                        type: array
+                      parameters:
+                        additionalProperties:
+                          additionalProperties: true
+                          properties:
+                            string_value:
+                              default: null
+                              description: '@@  .. cpp:var:: string string_value@@@@     The
+                                string value of the parameter.@@'
+                              title: String Value
+                              type: string
+                          title: Parameters
+                          type: object
+                        default: null
+                        description: '@@  .. cpp:var:: map<string,ModelParameter>
+                          parameters@@@@     Optional model parameters. User-specified
+                          parameter values.@@'
+                        title: Parameters
+                        type: object
+                      platform:
+                        default: null
+                        description: '@@  .. cpp:var:: string platform@@@@     Additional
+                          backend-specific configuration for the model.@@     Please
+                          refer to the backend documentation on whether this field@@     should
+                          be specified.@@'
+                        title: Platform
+                        type: string
+                      response_cache:
+                        additionalProperties: true
+                        properties:
+                          enable:
+                            default: null
+                            description: '@@@@  .. cpp::var:: bool enable@@@@     Whether
+                              or not to use response cache for the model. If True,
+                              the@@     responses from the model are cached and when
+                              identical request@@     is encountered, instead of going
+                              through the model execution,@@     the response from
+                              the cache is utilized. By default, response@@     cache
+                              is disabled for the models.@@'
+                            title: Enable
+                            type: boolean
+                        title: ResponseCache
+                        type: object
+                      runtime:
+                        default: null
+                        description: '@@  .. cpp:var:: string runtime@@@@     The
+                          name of the backend library file used by the model.@@'
+                        title: Runtime
+                        type: string
+                      sequence_batching:
+                        additionalProperties: true
+                        properties:
+                          control_input:
+                            default: null
+                            description: '@@  .. cpp:var:: ControlInput control_input
+                              (repeated)@@@@     The model input(s) that the server
+                              should use to communicate@@     sequence start, stop,
+                              ready and similar control values to the@@     model.@@'
+                            items:
+                              additionalProperties: true
+                              properties:
+                                control:
+                                  default: null
+                                  description: '@@    .. cpp:var:: Control control
+                                    (repeated)@@@@       The control value(s) that
+                                    should be communicated to the@@       model using
+                                    this model input.@@'
+                                  items:
+                                    additionalProperties: true
+                                    properties:
+                                      bool_false_true:
+                                        default: null
+                                        description: '@@    .. cpp:var:: bool bool_false_true
+                                          (repeated)@@@@       The control''s true
+                                          and false setting is indicated by setting@@       a
+                                          value in a bool tensor. The tensor must
+                                          be a@@       1-dimensional tensor with size
+                                          equal to the batch size of@@       the request.
+                                          ''bool_false_true'' must have two entries:
+                                          the@@       first the false value and the
+                                          second the true value.@@'
+                                        items:
+                                          type: boolean
+                                        title: Bool False True
+                                        type: array
+                                      data_type:
+                                        default: null
+                                        description: '@@.. cpp:namespace:: inference  @@@@..
+                                          cpp:enum:: DataType@@@@   Data types supported
+                                          for input and output tensors.@@'
+                                        enum:
+                                        - TYPE_INVALID
+                                        - 0
+                                        - TYPE_BOOL
+                                        - 1
+                                        - TYPE_UINT8
+                                        - 2
+                                        - TYPE_UINT16
+                                        - 3
+                                        - TYPE_UINT32
+                                        - 4
+                                        - TYPE_UINT64
+                                        - 5
+                                        - TYPE_INT8
+                                        - 6
+                                        - TYPE_INT16
+                                        - 7
+                                        - TYPE_INT32
+                                        - 8
+                                        - TYPE_INT64
+                                        - 9
+                                        - TYPE_FP16
+                                        - 10
+                                        - TYPE_FP32
+                                        - 11
+                                        - TYPE_FP64
+                                        - 12
+                                        - TYPE_STRING
+                                        - 13
+                                        - TYPE_BF16
+                                        - 14
+                                        title: '@@.. cpp:namespace:: inference'
+                                        type: string
+                                      fp32_false_true:
+                                        default: null
+                                        description: '@@    .. cpp:var:: float fp32_false_true
+                                          (repeated)@@@@       The control''s true
+                                          and false setting is indicated by setting@@       a
+                                          value in a fp32 tensor. The tensor must
+                                          be a@@       1-dimensional tensor with size
+                                          equal to the batch size of@@       the request.
+                                          ''fp32_false_true'' must have two entries:
+                                          the@@       first the false value and the
+                                          second the true value.@@'
+                                        items:
+                                          type: number
+                                        title: Fp32 False True
+                                        type: array
+                                      int32_false_true:
+                                        default: null
+                                        description: '@@    .. cpp:var:: int32 int32_false_true
+                                          (repeated)@@@@       The control''s true
+                                          and false setting is indicated by setting@@       a
+                                          value in an int32 tensor. The tensor must
+                                          be a@@       1-dimensional tensor with size
+                                          equal to the batch size of@@       the request.
+                                          ''int32_false_true'' must have two entries:
+                                          the@@       first the false value and the
+                                          second the true value.@@'
+                                        items:
+                                          type: integer
+                                        title: Int32 False True
+                                        type: array
+                                      kind:
+                                        default: null
+                                        description: '@@@@    .. cpp:enum:: Kind@@@@       The
+                                          kind of the control.@@'
+                                        enum:
+                                        - CONTROL_SEQUENCE_START
+                                        - 0
+                                        - CONTROL_SEQUENCE_READY
+                                        - 1
+                                        - CONTROL_SEQUENCE_END
+                                        - 2
+                                        - CONTROL_SEQUENCE_CORRID
+                                        - 3
+                                        title: Kind
+                                        type: string
+                                    title: ControlItem
+                                    type: object
+                                  title: Control
+                                  type: array
+                                name:
+                                  default: null
+                                  description: '@@    .. cpp:var:: string name@@@@       The
+                                    name of the model input.@@'
+                                  title: Name
+                                  type: string
+                              title: ControlInputItem
+                              type: object
+                            title: Control Input
+                            type: array
+                          direct:
+                            additionalProperties: true
+                            properties:
+                              max_queue_delay_microseconds:
+                                default: null
+                                description: '@@    .. cpp:var:: uint64 max_queue_delay_microseconds@@@@       The
+                                  maximum time, in microseconds, a candidate request@@       will
+                                  be delayed in the sequence batch scheduling queue
+                                  to@@       wait for additional requests for batching.
+                                  Default is 0.@@'
+                                title: Max Queue Delay Microseconds
+                                type: string
+                              minimum_slot_utilization:
+                                default: null
+                                description: '@@    .. cpp:var:: float minimum_slot_utilization@@@@       The
+                                  minimum slot utilization that must be satisfied
+                                  to@@       execute the batch before ''max_queue_delay_microseconds''
+                                  expires.@@       For example, a value of 0.5 indicates
+                                  that the batch should be@@       executed as soon
+                                  as 50% or more of the slots are ready even if@@       the
+                                  ''max_queue_delay_microseconds'' timeout has not
+                                  expired.@@       The default is 0.0, indicating
+                                  that a batch will be executed@@       before ''max_queue_delay_microseconds''
+                                  timeout expires if at least@@       one batch slot
+                                  is ready. ''max_queue_delay_microseconds'' will
+                                  be@@       ignored unless minimum_slot_utilization
+                                  is set to a non-zero@@       value.@@'
+                                title: Minimum Slot Utilization
+                                type: number
+                            title: Direct
+                            type: object
+                          iterative_sequence:
+                            default: null
+                            description: '@@  .. cpp:var:: bool iterative_sequence@@@@     Requests
+                              for iterative sequences are processed over a number@@     of
+                              iterations. An iterative sequence is initiated by a
+                              single@@     request and is "rescheduled" by the model
+                              until completion.@@     Requests for inflight requests
+                              will be batched together@@     and can complete independently.
+                              Note this feature@@     requires backend support. Default
+                              value is false.'
+                            title: Iterative Sequence
+                            type: boolean
+                          max_sequence_idle_microseconds:
+                            default: null
+                            description: '@@  .. cpp:var:: uint64 max_sequence_idle_microseconds@@@@     The
+                              maximum time, in microseconds, that a sequence is allowed
+                              to@@     be idle before it is aborted. The inference
+                              server considers a@@     sequence idle when it does
+                              not have any inference request queued@@     for the
+                              sequence. If this limit is exceeded, the inference server@@     will
+                              free the sequence slot allocated by the sequence and
+                              make it@@     available for another sequence. If not
+                              specified (or specified as@@     zero) a default value
+                              of 1000000 (1 second) is used.@@'
+                            title: Max Sequence Idle Microseconds
+                            type: string
+                          oldest:
+                            additionalProperties: true
+                            properties:
+                              max_candidate_sequences:
+                                default: null
+                                description: '@@    .. cpp:var:: int32 max_candidate_sequences@@@@       Maximum
+                                  number of candidate sequences that the batcher@@       maintains.
+                                  Excess sequences are kept in an ordered backlog@@       and
+                                  become candidates when existing candidate sequences@@       complete.@@'
+                                title: Max Candidate Sequences
+                                type: integer
+                              max_queue_delay_microseconds:
+                                default: null
+                                description: '@@    .. cpp:var:: uint64 max_queue_delay_microseconds@@@@       The
+                                  maximum time, in microseconds, a candidate request@@       will
+                                  be delayed in the dynamic batch scheduling queue
+                                  to@@       wait for additional requests for batching.
+                                  Default is 0.@@'
+                                title: Max Queue Delay Microseconds
+                                type: string
+                              preferred_batch_size:
+                                default: null
+                                description: '@@    .. cpp:var:: int32 preferred_batch_size
+                                  (repeated)@@@@       Preferred batch sizes for dynamic
+                                  batching of candidate@@       sequences. If a batch
+                                  of one of these sizes can be formed@@       it will
+                                  be executed immediately. If not specified a@@       preferred
+                                  batch size will be chosen automatically@@       based
+                                  on model and GPU characteristics.@@'
+                                items:
+                                  type: integer
+                                title: Preferred Batch Size
+                                type: array
+                              preserve_ordering:
+                                default: null
+                                description: '@@    .. cpp:var:: bool preserve_ordering@@@@       Should
+                                  the dynamic batcher preserve the ordering of responses
+                                  to@@       match the order of requests received
+                                  by the scheduler. Default is@@       false. If true,
+                                  the responses will be returned in the same order@@       as
+                                  the order of requests sent to the scheduler. If
+                                  false, the@@       responses may be returned in
+                                  arbitrary order. This option is@@       specifically
+                                  needed when a sequence of related inference requests@@       (i.e.
+                                  inference requests with the same correlation ID)
+                                  are sent@@       to the dynamic batcher to ensure
+                                  that the sequence responses are@@       in the correct
+                                  order.@@@@       When using decoupled models, setting
+                                  this to true may block the@@       responses from
+                                  independent sequences from being returned to the@@       client
+                                  until the previous request completes, hurting overall@@       performance.
+                                  If using GRPC streaming protocol, the stream@@       ordering
+                                  guarantee may be sufficient alone to ensure the@@       responses
+                                  for each sequence are returned in sequence-order@@       without
+                                  blocking based on independent requests, depending
+                                  on the@@       use case.@@'
+                                title: Preserve Ordering
+                                type: boolean
+                            title: Oldest
+                            type: object
+                          state:
+                            default: null
+                            description: '@@  .. cpp:var:: State state (repeated)@@@@     The
+                              optional state that can be stored in Triton for performing@@     inference
+                              requests on a sequence. Each sequence holds an implicit@@     state
+                              local to itself. The output state tensor provided by
+                              the@@     model in ''output_name'' field of the current
+                              inference request will@@     be transferred as an input
+                              tensor named ''input_name'' in the next@@     request
+                              of the same sequence. The input state of the first request@@     in
+                              the sequence contains garbage data.@@'
+                            items:
+                              additionalProperties: true
+                              properties:
+                                data_type:
+                                  default: null
+                                  description: '@@.. cpp:namespace:: inference  @@@@..
+                                    cpp:enum:: DataType@@@@   Data types supported
+                                    for input and output tensors.@@'
+                                  enum:
+                                  - TYPE_INVALID
+                                  - 0
+                                  - TYPE_BOOL
+                                  - 1
+                                  - TYPE_UINT8
+                                  - 2
+                                  - TYPE_UINT16
+                                  - 3
+                                  - TYPE_UINT32
+                                  - 4
+                                  - TYPE_UINT64
+                                  - 5
+                                  - TYPE_INT8
+                                  - 6
+                                  - TYPE_INT16
+                                  - 7
+                                  - TYPE_INT32
+                                  - 8
+                                  - TYPE_INT64
+                                  - 9
+                                  - TYPE_FP16
+                                  - 10
+                                  - TYPE_FP32
+                                  - 11
+                                  - TYPE_FP64
+                                  - 12
+                                  - TYPE_STRING
+                                  - 13
+                                  - TYPE_BF16
+                                  - 14
+                                  title: '@@.. cpp:namespace:: inference'
+                                  type: string
+                                dims:
+                                  default: null
+                                  description: '@@    .. cpp:var:: int64 dim (repeated)@@@@       The
+                                    dimension.@@'
+                                  items:
+                                    type: string
+                                  title: Dims
+                                  type: array
+                                initial_state:
+                                  default: null
+                                  description: '@@  .. cpp:var:: InitialState initial_state
+                                    (repeated)@@@@     The optional field to specify
+                                    the initial state for the model.@@'
+                                  items:
+                                    additionalProperties: true
+                                    properties:
+                                      data_file:
+                                        default: null
+                                        description: '@@      .. cpp:var:: string
+                                          data_file@@@@         The file whose content
+                                          will be used as the initial data for@@         the
+                                          state in row-major order. The file must
+                                          be provided in@@         sub-directory ''initial_state''
+                                          under the model directory.@@'
+                                        title: Data File
+                                        type: string
+                                      data_type:
+                                        default: null
+                                        description: '@@.. cpp:namespace:: inference  @@@@..
+                                          cpp:enum:: DataType@@@@   Data types supported
+                                          for input and output tensors.@@'
+                                        enum:
+                                        - TYPE_INVALID
+                                        - 0
+                                        - TYPE_BOOL
+                                        - 1
+                                        - TYPE_UINT8
+                                        - 2
+                                        - TYPE_UINT16
+                                        - 3
+                                        - TYPE_UINT32
+                                        - 4
+                                        - TYPE_UINT64
+                                        - 5
+                                        - TYPE_INT8
+                                        - 6
+                                        - TYPE_INT16
+                                        - 7
+                                        - TYPE_INT32
+                                        - 8
+                                        - TYPE_INT64
+                                        - 9
+                                        - TYPE_FP16
+                                        - 10
+                                        - TYPE_FP32
+                                        - 11
+                                        - TYPE_FP64
+                                        - 12
+                                        - TYPE_STRING
+                                        - 13
+                                        - TYPE_BF16
+                                        - 14
+                                        title: '@@.. cpp:namespace:: inference'
+                                        type: string
+                                      dims:
+                                        default: null
+                                        description: '@@      .. cpp:var:: int64 dims
+                                          (repeated)@@@@         The shape of the
+                                          state tensor, not including the batch@@         dimension.@@'
+                                        items:
+                                          type: string
+                                        title: Dims
+                                        type: array
+                                      name:
+                                        default: null
+                                        description: '@@  .. cpp:var:: string name@@@@     The
+                                          name of the state initialization.@@'
+                                        title: Name
+                                        type: string
+                                      zero_data:
+                                        default: null
+                                        description: '@@@@      .. cpp:var:: bool
+                                          zero_data@@@@         The identifier for
+                                          using zeros as initial state data.@@         Note
+                                          that the value of ''zero_data'' will not
+                                          be checked,@@         instead, zero data
+                                          will be used as long as the field is set.@@'
+                                        title: Zero Data
+                                        type: boolean
+                                    title: InitialStateItem
+                                    type: object
+                                  title: Initial State
+                                  type: array
+                                input_name:
+                                  default: null
+                                  description: '@@    .. cpp:var:: string input_name@@@@       The
+                                    name of the model state input.@@'
+                                  title: Input Name
+                                  type: string
+                                output_name:
+                                  default: null
+                                  description: '@@    .. cpp:var:: string output_name@@@@       The
+                                    name of the model state output.@@'
+                                  title: Output Name
+                                  type: string
+                                use_growable_memory:
+                                  default: null
+                                  description: '@@  .. cpp:var:: bool use_growable_memory@@@@     The
+                                    optional field to enable an implicit state buffer
+                                    to grow@@     without reallocating or copying
+                                    existing memory.@@     Additional memory will
+                                    be appended to the end of the buffer and@@     existing
+                                    data will be preserved.@@     This option is only
+                                    available for CUDA memory and requires enabling@@     use_same_buffer_for_input_output.
+                                    When using this option,@@     StateBuffer call
+                                    will always return CUDA memory even if CPU memory@@     is
+                                    requested.@@@@     The default value is false.@@'
+                                  title: Use Growable Memory
+                                  type: boolean
+                                use_same_buffer_for_input_output:
+                                  default: null
+                                  description: '@@  .. cpp:var:: bool use_same_buffer_for_input_output@@@@     The
+                                    optional field to use a single buffer for both
+                                    input and output@@     state. Without this option,
+                                    Triton allocates separate buffers@@     for input
+                                    and output state@@     which can be problematic
+                                    if the state size is@@     large. This option
+                                    reduces the memory usage by allocating a single@@     buffer.
+                                    Enabling this option is recommended whenever@@     the
+                                    input state is processed before the output state
+                                    is written.@@     When enabled the state@@     will
+                                    always be updated independent of whether@@     TRITONBACKEND_StateUpdate
+                                    is called@@     (however TRITONBACKEND_StateUpdate
+                                    should still be called for@@     completeness).@@@@     The
+                                    default value is false.@@'
+                                  title: Use Same Buffer For Input Output
+                                  type: boolean
+                              title: StateItem
+                              type: object
+                            title: State
+                            type: array
+                        title: SequenceBatching
+                        type: object
+                      version_policy:
+                        additionalProperties: true
+                        properties:
+                          all:
+                            default: null
+                            description: '@@  .. cpp:var:: message All@@@@     Serve
+                              all versions of the model.@@'
+                            title: All
+                            type: object
+                          latest:
+                            additionalProperties: true
+                            properties:
+                              num_versions:
+                                default: null
+                                description: '@@    .. cpp:var:: uint32 num_versions@@@@       Serve
+                                  only the ''num_versions'' highest-numbered versions.
+                                  T@@       The default value of ''num_versions''
+                                  is 1, indicating that by@@       default only the
+                                  single highest-number version of a@@       model
+                                  will be served.@@'
+                                title: Num Versions
+                                type: integer
+                            title: Latest
+                            type: object
+                          specific:
+                            additionalProperties: true
+                            properties:
+                              versions:
+                                default: null
+                                description: '@@    .. cpp:var:: int64 versions (repeated)@@@@       The
+                                  specific versions of the model that will be served.@@'
+                                items:
+                                  type: string
+                                title: Versions
+                                type: array
+                            title: Specific
+                            type: object
+                        title: VersionPolicy
+                        type: object
+                    title: ModelConfig
+                    type: object
                   labels:
                     default: []
                     items:
                       type: string
                     title: Labels
                     type: array
-                  modelConfig:
-                    allOf:
-                    - properties:
-                        input:
-                          items: {}
-                          title: Input
-                          type: array
-                        max_batch_size:
-                          title: Max Batch Size
-                          type: integer
-                        output:
-                          items: {}
-                          title: Output
-                          type: array
-                        platform:
-                          title: Platform
-                          type: string
-                      required:
-                      - max_batch_size
-                      - input
-                      - output
-                      - platform
-                      title: ModelConfigSpec
-                      type: object
-                    x-kubernetes-preserve-unknown-fields: 'true'
                   versions:
                     items:
                       properties:
@@ -105,12 +1943,13 @@ spec:
                     title: Versions
                     type: array
                 required:
-                - modelConfig
+                - config
                 - versions
                 title: ModelSpec
                 type: object
             required:
             - model
+            - jobTemplate
             title: ModelDeploymentSpec
             type: object
         type: object

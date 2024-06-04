@@ -1,5 +1,7 @@
-from model_deployment_operator.crd.schemabase import KubeResourceBase
-from model_deployment_operator.crd.model import ModelDeploymentSpec
+import sys
+
+from kube_crd_generator.schemabase import KubeResourceBase
+from .model import ModelDeploymentSpec
 
 
 class ModelDeployment(KubeResourceBase):
@@ -38,5 +40,4 @@ def main():
     return 0
 
 
-if __name__ == "__main__":
-    exit(main())
+sys.exit(main())

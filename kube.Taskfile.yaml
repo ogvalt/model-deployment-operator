@@ -9,6 +9,7 @@ tasks:
     desc: Start development process
     cmds:
       - task: start
+      - task: load-images
       - task: install-triton
       - task: install-operator-chart
 
@@ -22,7 +23,13 @@ tasks:
       desc: Start minikube
       cmds:
         - minikube start --kubernetes-version=v1.29.0
+
+  load-images:
+      desc: Load application to minikube
+      cmds:
         - minikube image load popovych-labs/model-deployment-operator:latest-dev
+        - minikube image load popovych-labs/model-deployment-operator/job/s3:latest-dev
+
   stop:
     desc: Stop minikube
     cmds:
@@ -35,7 +42,7 @@ tasks:
         helm upgrade --install \
         --values ./{{.OPERATOR_CHART_FOLDER}}/values.yaml \
         --namespace model-deployment-operator --create-namespace \
-        model-deployment-operator ./{{.OPERATOR_CHART_FOLDER}}
+        model-deployment-operator ./{{.OPERATOR_CHART_FOLDER}} &> log.txt 
 
   render-operator-chart:
     desc: Render helm chart

@@ -149,7 +149,7 @@ class KubeResourceBase:
             ),
             Dumper=yaml.Dumper,
         )
-    
+
     @classmethod
     def json_schema(cls):
         """Serialized JSON representation of Kubernetes CRD definition for cls.

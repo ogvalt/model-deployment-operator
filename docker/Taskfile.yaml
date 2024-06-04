@@ -48,12 +48,12 @@ tasks:
   docker-build-jobs:
     desc: Building docker image
     vars: 
-      IMAGE_NAME: ${ORGANIZATION}/model-deployment-jobs:{{.VERSION}}
+      IMAGE_NAME: ${ORGANIZATION}/model-deployment-operator/job/s3:{{.VERSION}}-dev
     cmds:
       - |
         {{.DOCKER}} build \
           --progress=plain \
-          --target operator_image \
+          --target job_image \
           --tag {{.IMAGE_NAME}} \
           --file ${PWD}/docker/jobs/Dockerfile \
           ${PWD}

@@ -29,7 +29,7 @@ tasks:
   generate-crd:
     desc: Generate CRD
     cmds:
-      - poetry run python model_deployment_operator/crd_generator.py > helm/templates/crd-model-deployment.yaml
+      - poetry run python -m src.model_deployment_operator.crd > helm/templates/crd-model-deployment.yaml
 
   create-object:
     desc: Create CRD
@@ -40,3 +40,14 @@ tasks:
     desc: Delete CRD
     cmds:
       - kubectl delete -f ./example/model-deployment.yaml
+
+  generate-pydantic-models:
+    desc: Generate pydantic models
+    cmds:
+      - |
+        poetry run datamodel-codegen --base-class kube_crd_generator.BaseModel \
+          --enum-field-as-literal all \
+          --wrap-string-literal \
+          --input src/triton-model-config-schema/r24.01-r24.05/scheme.json \
+          --input-file-type jsonschema \
+          --output src/model_deployment_operator/crd/generated/triton_model_config.py

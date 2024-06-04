@@ -7,15 +7,8 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-
-
-[tool.poetry.group.operator.dependencies]
 kopf = { version="^1.37.2", extras=["uvloop"]}
 kubernetes = "^29.0.0"
-geventhttpclient = ">=1.4.4,<=2.0.2"
-jinja2 = "^3.1.3"
-
-[tool.poetry.group.job.dependencies]
 fire = "^0.6.0"
 tritonclient = {extras = ["http"], version = "^2.45.0"}
 boto3 = "^1.34.98"
@@ -31,6 +24,7 @@ pydantic = "^2.7.1"
 jsonref = "^1.1.0"
 pyyaml = "^6.0.1"
 kubernetes-validate = "^1.29.1"
+datamodel-code-generator = "^0.25.6"
 
 
 [build-system]
