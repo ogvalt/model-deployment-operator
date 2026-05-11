@@ -10,7 +10,7 @@ tasks:
   test:
     desc: Run tests
     cmds:
-      - poetry run pytest -v --show-capture=all
+      - uv run pytest -v --show-capture=all
 
   clean-cache:
     desc: Clean python, pytest, ruff, mypy caches
@@ -29,7 +29,7 @@ tasks:
   generate-crd:
     desc: Generate CRD
     cmds:
-      - poetry run python -m src.model_deployment_operator.crd > helm/templates/crd-model-deployment.yaml
+      - uv run python -m src.model_deployment_operator.crd > helm/templates/crd-model-deployment.yaml
 
   create-object:
     desc: Create CRD
@@ -45,7 +45,7 @@ tasks:
     desc: Generate pydantic models
     cmds:
       - |
-        poetry run datamodel-codegen --base-class kube_crd_generator.BaseModel \
+        uv run datamodel-codegen --base-class kube_crd_generator.BaseModel \
           --enum-field-as-literal all \
           --wrap-string-literal \
           --input src/triton-model-config-schema/r24.01-r24.05/scheme.json \
