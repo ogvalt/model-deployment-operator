@@ -11,7 +11,7 @@ WORKDIR /workdir
 
 COPY pyproject.toml uv.lock ./
 
-RUN uv export --no-hashes --no-dev --output-file requirements.txt
+RUN uv export --no-hashes --no-dev --no-emit-project --output-file requirements.txt
 
 ARG BASE_IMAGE="python"
 ARG IMAGE_TAG=3.10-alpine
