@@ -3,15 +3,15 @@ ARG BASE_IMAGE="python"
 ARG IMAGE_TAG=3.10-alpine
 FROM ${BASE_IMAGE}:${IMAGE_TAG} as export_requirements_stage
 
-ARG POETRY_VERSION=1.8.1
+ARG UV_VERSION=0.7.3
 
-RUN pip install "poetry==${POETRY_VERSION}"
+RUN pip install "uv==${UV_VERSION}"
 
 WORKDIR /workdir
 
-COPY pyproject.toml poetry.lock ./
+COPY pyproject.toml uv.lock ./
 
-RUN poetry export --without-hashes -o requirements.txt
+RUN uv export --no-hashes --no-dev --output-file requirements.txt
 
 ARG BASE_IMAGE="python"
 ARG IMAGE_TAG=3.10-alpine
