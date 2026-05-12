@@ -4,6 +4,7 @@ metadata:
   name: operator-config
   namespace: triton
 data:
+  # LocalStack uses dummy static credentials for local development/testing only.
   aws_access_key_id: test
   aws_secret_access_key: test
   aws_region_name: us-east-1
