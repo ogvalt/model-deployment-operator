@@ -4,8 +4,8 @@ metadata:
   name: operator-config
   namespace: triton
 data:
-  # LocalStack uses dummy static credentials for local development/testing only.
-  aws_access_key_id: test
-  aws_secret_access_key: test
+  # WARNING: Local development-only dummy credentials. Do not use in production.
+  aws_access_key_id: LOCALSTACK_DUMMY_KEY
+  aws_secret_access_key: LOCALSTACK_DUMMY_SECRET
   aws_region_name: us-east-1
   aws_endpoint_url: http://host.minikube.internal:4566
