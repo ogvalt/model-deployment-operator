@@ -35,10 +35,10 @@ tasks:
     cmds:
       - |
         tries=0
-        localstack_health_max_tries=60
+        LOCALSTACK_HEALTH_MAX_TRIES=60
         until curl -sS http://localhost:4566/_localstack/health | grep -q '"s3": "available"'; do
           tries=$((tries + 1))
-          if [ "$tries" -ge "$localstack_health_max_tries" ]; then
+          if [ "$tries" -ge "$LOCALSTACK_HEALTH_MAX_TRIES" ]; then
             echo "LocalStack did not become healthy in time"
             exit 1
           fi
