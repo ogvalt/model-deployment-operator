@@ -37,7 +37,7 @@ tasks:
         # 60 tries * 2s sleep = ~120s total timeout.
         LOCALSTACK_HEALTH_MAX_TRIES=60
         TRIES=0
-        until curl -sS http://localhost:4566/_localstack/health | grep -q '"s3": "available"'; do
+        until curl -sS http://localhost:4566/_localstack/health | python -c 'import json,sys; d=json.load(sys.stdin); s3=d.get("s3") or d.get("services", {}).get("s3"); raise SystemExit(0 if s3=="available" else 1)'; do
           TRIES=$((TRIES + 1))
           if [ "$TRIES" -ge "$LOCALSTACK_HEALTH_MAX_TRIES" ]; then
             echo "LocalStack did not become healthy in time"
