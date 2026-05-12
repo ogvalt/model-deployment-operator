@@ -27,20 +27,20 @@ spec:
           data_type: TYPE_INT32
           dims:
             - '16'
-    labels: ... # output-labels-file
+    # Labels expected by the bundled local test model.
+    labels:
+      - class_0
+      - class_1
     versions:
       - version: 1
         files:
-          - name: model.plan #  triton specific name
+          - name: model.graphdef
             source: s3://bucket/model_repository/model.graphdef
 
   jobTemplate:
-    provider: operator | user
+    provider: operator
     spec:
       source: s3
       auth:
         type: configMap
-        name: aws-creds
-
-      image: popovych-labs/model-deployment-job-s3:latest
-      configMap: aws-config
+        name: operator-config

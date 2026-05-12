@@ -32,6 +32,26 @@ The Model Deployment Operator is a prototype system designed to automate the dep
     helm install model-deployment-operator ./helm
     ```
 
+## Local End-to-End Testing (Minikube + Triton + LocalStack S3)
+
+Use the Kubernetes taskfile workflow to run operator + Triton and test model loading from S3 locally.
+
+```bash
+task kube:develop
+```
+
+This flow now:
+- Starts LocalStack (S3) and seeds `s3://bucket/model_repository/model.graphdef`
+- Starts Minikube and loads operator/job images
+- Installs Triton and operator charts
+- Applies local S3 config (`example/config-map-operator.yaml`) and example ModelDeployment (`example/md-source-s3.yaml`)
+
+To stop and clean up:
+
+```bash
+task kube:stop-develop
+```
+
 ## Contributing
 
 Contributions are welcome! Please open issues and pull requests to help improve this project.

@@ -8,17 +8,48 @@ tasks:
   develop:
     desc: Start development process
     cmds:
+      - task: start-localstack
+      - task: wait-localstack
       - task: start
       - task: load-images
       - task: install-triton
       - task: install-operator-chart
+      - task: apply-s3-example
 
   stop-develop:
     desc: Stop development process
     cmds:
+      - task: delete-s3-example
       - task: delete-operator-chart
       - task: delete-triton
       - task: stop
+      - task: stop-localstack
+
+  start-localstack:
+    desc: Start localstack with seeded test bucket/object
+    cmds:
+      - docker compose up -d localstack
+
+  wait-localstack:
+    desc: Wait for localstack to become healthy
+    cmds:
+      - |
+        # 60 tries * 2s sleep = ~120s total timeout.
+        LOCALSTACK_HEALTH_MAX_TRIES=60
+        TRIES=0
+        until curl -sS http://localhost:4566/_localstack/health | python -c 'import json,sys; d=json.load(sys.stdin); s3=d.get("s3") or d.get("services", {}).get("s3"); raise SystemExit(0 if s3=="available" else 1)'; do
+          TRIES=$((TRIES + 1))
+          if [ "$TRIES" -ge "$LOCALSTACK_HEALTH_MAX_TRIES" ]; then
+            echo "LocalStack did not become healthy in time"
+            exit 1
+          fi
+          sleep 2
+        done
+
+  stop-localstack:
+    desc: Stop localstack
+    cmds:
+      - docker compose down
   start:
       desc: Start minikube
       cmds:
@@ -84,3 +115,15 @@ tasks:
     cmds:
       - |
         helm delete triton -n triton
+
+  apply-s3-example:
+    desc: Apply local S3 auth config and example ModelDeployment
+    cmds:
+      - kubectl apply -f ./example/config-map-operator.yaml
+      - kubectl apply -f ./example/md-source-s3.yaml
+
+  delete-s3-example:
+    desc: Delete local S3 auth config and example ModelDeployment
+    cmds:
+      - kubectl delete -f ./example/md-source-s3.yaml --ignore-not-found=true
+      - kubectl delete -f ./example/config-map-operator.yaml --ignore-not-found=true

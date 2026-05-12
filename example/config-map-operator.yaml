@@ -2,10 +2,10 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: operator-config
+  namespace: triton
 data:
-  awsConfig: |
-    access_key_id: XXX
-    secret_access_key: XXX
-    region_name: XXX
-    endpoint_url: XXX
-    
+  # WARNING: Local development-only dummy credentials. Do not use in production.
+  aws_access_key_id: LOCALSTACK_DUMMY_KEY
+  aws_secret_access_key: LOCALSTACK_DUMMY_SECRET
+  aws_region_name: us-east-1
+  aws_endpoint_url: http://host.minikube.internal:4566
