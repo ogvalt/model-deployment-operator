@@ -27,6 +27,7 @@ spec:
           data_type: TYPE_INT32
           dims:
             - '16'
+    # Labels expected by the bundled local test model.
     labels:
       - class_0
       - class_1

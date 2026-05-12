@@ -35,6 +35,7 @@ tasks:
     cmds:
       - |
         TRIES=0
+        # 60 tries * 2s sleep = ~120s total timeout.
         LOCALSTACK_HEALTH_MAX_TRIES=60
         until curl -sS http://localhost:4566/_localstack/health | grep -q '"s3": "available"'; do
           TRIES=$((TRIES + 1))
